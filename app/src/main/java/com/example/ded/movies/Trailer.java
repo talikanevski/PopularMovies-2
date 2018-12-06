@@ -4,7 +4,7 @@ public class Trailer {
     String trailerName;
     String trailerKey;
 
-    public Trailer(String name, String key) {}
+    public Trailer() {}
 
     public String getTrailerName () {return trailerName;}
 
@@ -12,9 +12,9 @@ public class Trailer {
         this.trailerName = trailerName;
     }
 
-    public String getTrailerKey () {return trailerKey;}
-
     public void setTrailerKey(String trailerKey) {
         this.trailerKey = trailerKey;
     }
+
+    public String getTrailerKey() {return trailerKey;}
 }

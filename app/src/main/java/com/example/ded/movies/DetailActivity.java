@@ -14,6 +14,8 @@ import android.widget.Toast;
 import com.example.ded.movies.databinding.ActivityDetailBinding;//This class was generated based on the name of the xml layout
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONException;
+
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -22,9 +24,9 @@ import java.util.List;
 public class DetailActivity extends AppCompatActivity implements TrailerAdapter.ListItemClickListener {
 
     public static final String CURRENT_MOVIE = "current_movie";
-    private RecyclerView mTrailersRecyclerView;
     ActivityDetailBinding mBinding; //Create a data binding instance. This class was generated based on the name of the xml layout
     private com.example.ded.movies.TrailerAdapter adapter;
+    private com.example.ded.movies.ReviewAdapter reviewAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +42,11 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
         adapter = new com.example.ded.movies.TrailerAdapter( this);
         mBinding.rvTrailers.setAdapter(adapter);
 
+        // set up recyclerview and adapter to display the reviews
+        LinearLayoutManager reviewsLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        mBinding.rvReviews.setLayoutManager(reviewsLayoutManager);
+        reviewAdapter = new com.example.ded.movies.ReviewAdapter( this);
+        mBinding.rvReviews.setAdapter(reviewAdapter);
 
         Intent intent = getIntent();
         if (intent == null) {
@@ -79,6 +86,7 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
             Picasso.with(this)
                     .load("https://image.tmdb.org/t/p/w185" + currentMovie.getPoster())
                     .into(backdrop);
+            loadTrailersPlusReviews(currentMovie.getId());
         }
     }
 
@@ -92,35 +100,56 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
 
     }
 
-    // in a background thread get ArrayList of the trailers for selected movie
+    // in a background thread get ArrayList of the trailers and reviews for selected movie
     // AsyncTask extends Object java.lang.Object android.os.AsyncTask<Params, Progress, Result>; ==Movie[]
-    public class TrailersTask extends AsyncTask<String, String, List<Object>> {
+    public class Task extends AsyncTask<String, String, List<Object>> {
 
         @Override
         protected List<Object> doInBackground(String... params) {
             URL trailerUrl = QueryUtils.trailersReviewsUrl(params[0]);
+
+            String response = null;
             try {
-                String response = QueryUtils.getResponseFromHttpUrl(trailerUrl);
-                List<Trailer> trailer = QueryUtils.extractTrailersFromJson(this, response);
-                List<Object> trailers = new ArrayList<Object>();
-                trailers.add(trailer);
-                return trailers;
+                response = QueryUtils.getResponseFromHttpUrl(trailerUrl);
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            return null;
+            Trailer []trailers = new Trailer[0];
+            try {
+                trailers = QueryUtils.extractTrailersFromJson(this, response);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            Review [] reviews = new Review[0];
+            try {
+                reviews = QueryUtils.extractReviewsFromJson(this, response);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            List<Object> trailersPlusReviews = new ArrayList<Object>();
+                trailersPlusReviews.add(trailers);
+                trailersPlusReviews.add(reviews);
+                return trailersPlusReviews;
+
         }
 
         @Override
-        protected void onPostExecute(List<Object> listOfTrailers) {
-            if (listOfTrailers != null) {
-                Trailer[] trailers = (Trailer[]) listOfTrailers.get(1);
+        protected void onPostExecute(List<Object> listOfTrailersPlusReviews) {
+            if (listOfTrailersPlusReviews != null) {
+                Trailer[] trailers = (Trailer[]) listOfTrailersPlusReviews.get(0);
                 adapter.setTrailerData(trailers);
+
+                Review [] reviews = (Review[]) listOfTrailersPlusReviews.get(1);
+                reviewAdapter.setReviewData(reviews);
 
             } else {
                 Toast.makeText(DetailActivity.this, getString(R.string.no_data), Toast.LENGTH_LONG).show();
             }
         }
+    }
+
+    private void loadTrailersPlusReviews(String movieId){
+        new Task().execute(movieId, null, null);
     }
 }
 

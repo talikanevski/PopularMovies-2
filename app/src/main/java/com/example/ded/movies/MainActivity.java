@@ -25,9 +25,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     public static final String API_Key_Label = "api_key=";
     public static final String API_Key = BuildConfig.ApiKey;
-    public static final String THE_MOVIE_DB_BASE_URL = "https://api.themoviedb.org/3/movie";
-    private static final String POPULAR = "/popular?";
-    private static final String TOP_RATED = "/top_rated?";
+    public static final String THE_MOVIE_DB_BASE_URL = "https://api.themoviedb.org/3/movie/";
+    private static final String POPULAR = "popular?";
+    private static final String TOP_RATED = "top_rated?";
     private String THE_MOVIE_DB_URL = THE_MOVIE_DB_BASE_URL + POPULAR + API_Key_Label + API_Key; // by default
 // https://api.themoviedb.org/3/movie/335983?api_key=27489f2914bd9f638025496deaad801e&append_to_response=reviews%2Cvideos
     /**

@@ -12,14 +12,17 @@ public class Movie implements Parcelable {
     private final String mUserRating; /*** user rating */
     private final String mPoster;/** movie poster*/
     private final String mBackdrop; /** backdrop**/
+    private final String mId; /** backdrop**/
 
-    public Movie(String title, String overview, String releaseDate, String userRating, String poster, String backdrop) {
+
+    public Movie(String title, String overview, String releaseDate, String userRating, String poster, String backdrop, String id) {
         mTitle = title;
         mOverview = overview;
         mReleaseDate = releaseDate;
         mUserRating = userRating;
         mPoster = poster;
         mBackdrop = backdrop;
+        mId = id;
     }
 
     private Movie(Parcel in) {
@@ -29,6 +32,7 @@ public class Movie implements Parcelable {
         mUserRating = in.readString();
         mPoster = in.readString();
         mBackdrop = in.readString();
+        mId = in.readString();
     }
 
     public static final Creator<Movie> CREATOR = new Creator<Movie>() {
@@ -52,6 +56,7 @@ public class Movie implements Parcelable {
     public String getUserRating() {return mUserRating;}
 
     public String getPoster() {return mPoster;}
+    public String getId() {return mId;}
 
     @Override
     public int describeContents() {
@@ -66,5 +71,5 @@ public class Movie implements Parcelable {
         parcel.writeString(mUserRating);
         parcel.writeString(mPoster);
         parcel.writeString(mBackdrop);
-    }
+        parcel.writeString(mId);    }
 }

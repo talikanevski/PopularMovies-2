@@ -9,8 +9,6 @@ import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
 
-import java.util.List;
-
 public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.TrailerAdapterViewHolder> {
     private Trailer[] mTrailers;
     public static final String YOUTUBE_BASE_URL = "https://img.youtube.com/vi/";
@@ -45,7 +43,7 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.TrailerA
 
     @Override
     public void onBindViewHolder(@NonNull TrailerAdapter.TrailerAdapterViewHolder trailerAdapterViewHolder, int position) {
-        String thumbnailUrl = YOUTUBE_BASE_URL + mTrailers[position].getTrailerKey() + YOUTUBE_DEFAULT_THUMBNAIL;
+        String thumbnailUrl = YOUTUBE_BASE_URL +  mTrailers[position].getTrailerKey() + YOUTUBE_DEFAULT_THUMBNAIL;
         Picasso.with(trailerAdapterViewHolder.ivTrailer.getContext())
                 .load(thumbnailUrl)
                 .into(trailerAdapterViewHolder.ivTrailer);

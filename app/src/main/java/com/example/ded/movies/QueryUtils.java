@@ -4,8 +4,6 @@ import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.example.ded.movies.Movie;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -32,7 +30,7 @@ import static com.example.ded.movies.MovieLoader.LOG_TAG;
  * Helper methods related to requesting and receiving movies from "The Movie DB".
  */
 final class QueryUtils {
-    final static String API_APPEND_TO_RESPONSE_PARAM = "append_to_response";
+    final static String API_APPEND_TO_RESPONSE_PARAM = "append_to_response";//use for trailers and reviews
 
     private QueryUtils() {
     }
@@ -44,6 +42,7 @@ final class QueryUtils {
         String userRating;
         String thumbnail;
         String backdrop;
+        String id;
 
         /*If the JSON string is empty or null, then return early.**/
         if (TextUtils.isEmpty(jsonResponse)) {
@@ -66,7 +65,8 @@ final class QueryUtils {
                 userRating = result.getString("vote_average");
                 thumbnail = result.getString("poster_path");
                 backdrop = result.getString("backdrop_path");
-                Movie movie = new Movie(title, overview, releaseDate, userRating, thumbnail, backdrop);
+                id = result.getString("id");
+                Movie movie = new Movie(title, overview, releaseDate, userRating, thumbnail, backdrop, id);
                 movies.add(movie);
             }
 
@@ -97,16 +97,19 @@ final class QueryUtils {
     // in a background thread and displays those details when the user selects a movie.
     //App requests for user reviews for a selected movie via the /movie/{id}/reviews endpoint
     // in a background thread and displays those details when the user selects a movie.
+
     /**
      * Returns new URL object from the given movieId, to include trailers and reviews
      */
-    public static URL trailersReviewsUrl(String movieId){
-        Uri uriBuilder = Uri.parse(THE_MOVIE_DB_BASE_URL + movieId).buildUpon()
-                .appendQueryParameter(API_Key_Label, API_Key)
+    public static URL trailersReviewsUrl(String movieId) {
+        Uri uriBuilder = Uri.parse(THE_MOVIE_DB_BASE_URL + movieId + "?" + API_Key_Label + API_Key).buildUpon()
+//                .appendQueryParameter(API_Key_Label, API_Key)
                 .appendQueryParameter(API_APPEND_TO_RESPONSE_PARAM, "reviews,videos")
                 .build();
-       return createUrl(String.valueOf(uriBuilder));
-      }
+
+
+        return createUrl(String.valueOf(uriBuilder));
+    }
 
     /**
      * Make an HTTP request to the given URL and return a String as the response.
@@ -211,46 +214,59 @@ final class QueryUtils {
         return extractFeatureFromJson(jsonResponse);
     }
 
-    public static List<Trailer> extractTrailersFromJson(DetailActivity.TrailersTask trailersTask, String jsonResponse) {
-        String name;
-        String key;
-
+    public static Trailer[] extractTrailersFromJson(DetailActivity.Task trailersTask, String jsonResponse) throws JSONException {
         /*If the JSON string is empty or null, then return early.**/
         if (TextUtils.isEmpty(jsonResponse)) {
             return null;
         }
 
+        JSONObject baseJsonResponse = new JSONObject(jsonResponse);
+        JSONObject videos = baseJsonResponse.getJSONObject("videos");
+        JSONArray resultsArray = videos.getJSONArray("results");
+
         /*Create an empty ArrayList that we can start adding trailers to**/
-        List<Trailer> trailers = new ArrayList<>();
+        Trailer[] trailers = new Trailer[resultsArray.length()];
 
-        try {
-            JSONObject baseJsonResponse = new JSONObject(jsonResponse);
-
-            JSONObject videos = baseJsonResponse.getJSONObject("videos");
-
-            JSONArray resultsArray = videos.getJSONArray("results");
-
-            for (int i = 0; i < resultsArray.length(); i++) {
-                JSONObject result = resultsArray.getJSONObject(i);
-                name = result.getString("name");
-                key = result.getString("key");
-
-                Trailer trailer = new Trailer(name, key);
-                trailers.add(trailer);
-            }
-
-        } catch (JSONException e) {
-            /* an error is thrown when executing any of the above statements in the "try" block,
-             // catch the exception here, so the app doesn't crash. Print a log message
-             // with the message from the exception.**/
-            Log.e("QueryUtils", "Problem parsing the trailers JSON results, extractTrailersFromJson", e);
+        for (int i = 0; i < resultsArray.length(); i++) {
+            Trailer trailer = new Trailer();
+            JSONObject result = resultsArray.getJSONObject(i);
+            trailer.setTrailerName(result.getString("name"));
+            trailer.setTrailerKey(result.getString("key"));
+            trailers[i] = trailer;
         }
         /* Return the list of trailers  **/
         return trailers;
     }
+
+    public static Review[] extractReviewsFromJson(DetailActivity.Task context, String jsonResponse) throws JSONException {
+
+//        /*If the JSON string is empty or null, then return early.**/
+//        if (TextUtils.isEmpty(jsonResponse)) {
+//            return null;
+//        }
+
+        JSONObject baseJsonResponse = new JSONObject(jsonResponse);
+        JSONObject r = baseJsonResponse.getJSONObject("reviews");
+        JSONArray resultsArray = r.getJSONArray("results");
+
+        /*Create an empty ArrayList that we can start adding trailers to**/
+        Review[] reviews = new Review[resultsArray.length()];
+
+        for (int i = 0; i < resultsArray.length(); i++) {
+            Review review = new Review();
+            JSONObject result = resultsArray.getJSONObject(i);
+            review.setAuthor(result.getString("author"));
+            review.setContent(result.getString("content"));
+            reviews[i] = review;
+        }
+        /* Return the list of trailers  **/
+        return reviews;
+    }
+
     /**
      * This method returns the entire result from the HTTP response.
      * AND\ud851-Sunshine-student\S03.02-Solution-RecyclerViewClickHandling
+     *
      * @param url The URL to fetch the HTTP response from.
      * @return The contents of the HTTP response.
      * @throws IOException Related to network and stream reading
