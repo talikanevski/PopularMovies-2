@@ -1,0 +1,29 @@
+<resources>
+    <string name="app_name">Movies</string>
+    <string name="no_internet">No internet connection</string>
+    <string name="no_movies">No Movies updates available, please reload the app or check after some time.</string>
+
+    <!-- Error messages-->
+    <string name="detail_error_message">Sandwich data not available</string>
+
+    <string name="settings_title">Movie Settings</string>
+
+    <!-- Strings For Sort-By Preference [CHAR LIMIT=30] -->
+    <string name="settings_sort_by_label">Sort By</string>
+    <string name="settings_sort_by_key" translatable="false">sort_by</string>
+    <string name="settings_sort_by_default" translatable="false">@string/settings_sort_by_most_popular_value</string>
+
+    <!-- Label for sort-by most popular option [CHAR LIMIT=20] -->
+    <string name="settings_sort_by_most_popular_label">Most Popular</string>
+    <string name="settings_sort_by_most_popular_value" translatable="false">popularity.desc</string>
+
+    <!-- Label for sort-by highest-rated option [CHAR LIMIT=20] -->
+    <string name="settings_sort_by_highest_rated_label">Highest-rated</string>
+    <string name="settings_sort_by_highest_rated_value" translatable="false">vote_average.desc</string>
+    <string name="backdrop">backdrop</string>
+    <string name="poster">poster</string>
+    <string name="overview">Overview</string>
+    <string name="popular">Popular</string>
+    <string name="top_rated">Top Rated</string>
+
+</resources>

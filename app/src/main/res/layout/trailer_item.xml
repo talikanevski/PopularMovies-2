@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Use <layout> as the root tag for activity_main to generate the ActivityMainBinding-->
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+
+        <ImageView
+            android:id="@+id/iv_trailer_thumbnail"
+            android:layout_width="@dimen/trailer_thumbnail_width"
+            android:layout_height="@dimen/trailer_thumbnail_height" />
+        <TextView
+            android:id="@+id/trailers_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+</layout>
