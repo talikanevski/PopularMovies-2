@@ -23,9 +23,9 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List<Movie>> {
     private static final String LOG_TAG = MainActivity.class.getName();
 
-    private static final String API_Key_Label = "api_key=";
-    private static final String API_Key = BuildConfig.ApiKey;
-    private static final String THE_MOVIE_DB_BASE_URL = "https://api.themoviedb.org/3/movie";
+    public static final String API_Key_Label = "api_key=";
+    public static final String API_Key = BuildConfig.ApiKey;
+    public static final String THE_MOVIE_DB_BASE_URL = "https://api.themoviedb.org/3/movie";
     private static final String POPULAR = "/popular?";
     private static final String TOP_RATED = "/top_rated?";
     private String THE_MOVIE_DB_URL = THE_MOVIE_DB_BASE_URL + POPULAR + API_Key_Label + API_Key; // by default

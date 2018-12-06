@@ -14,10 +14,12 @@ import android.widget.Toast;
 import com.example.ded.movies.databinding.ActivityDetailBinding;//This class was generated based on the name of the xml layout
 import com.squareup.picasso.Picasso;
 
+import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
-public class DetailActivity extends AppCompatActivity {
+public class DetailActivity extends AppCompatActivity implements TrailerAdapter.ListItemClickListener {
 
     public static final String CURRENT_MOVIE = "current_movie";
     private RecyclerView mTrailersRecyclerView;
@@ -35,7 +37,7 @@ public class DetailActivity extends AppCompatActivity {
         // set up recyclerview and adapter to display the trailers
         LinearLayoutManager trailersLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         mBinding.rvTrailers.setLayoutManager(trailersLayoutManager);
-        adapter = new com.example.ded.movies.TrailerAdapter((TrailerAdapter.ListItemClickListener) this);
+        adapter = new com.example.ded.movies.TrailerAdapter( this);
         mBinding.rvTrailers.setAdapter(adapter);
 
 
@@ -85,14 +87,39 @@ public class DetailActivity extends AppCompatActivity {
         Toast.makeText(this, R.string.detail_error_message, Toast.LENGTH_SHORT).show();
     }
 
-    // in a background thread get the trailers for selected movie
+    @Override
+    public void onClick(Trailer clickedItem) {
+
+    }
+
+    // in a background thread get ArrayList of the trailers for selected movie
     // AsyncTask extends Object java.lang.Object android.os.AsyncTask<Params, Progress, Result>; ==Movie[]
-    public class TrailersTask extends AsyncTask<String, String, List<Object>>{
+    public class TrailersTask extends AsyncTask<String, String, List<Object>> {
 
         @Override
-        protected List<Object> doInBackground(String... strings) {
-            URL trailerUrl = QueryUtils.extractTrailersFromJson(this, )
+        protected List<Object> doInBackground(String... params) {
+            URL trailerUrl = QueryUtils.trailersReviewsUrl(params[0]);
+            try {
+                String response = QueryUtils.getResponseFromHttpUrl(trailerUrl);
+                List<Trailer> trailer = QueryUtils.extractTrailersFromJson(this, response);
+                List<Object> trailers = new ArrayList<Object>();
+                trailers.add(trailer);
+                return trailers;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             return null;
+        }
+
+        @Override
+        protected void onPostExecute(List<Object> listOfTrailers) {
+            if (listOfTrailers != null) {
+                Trailer[] trailers = (Trailer[]) listOfTrailers.get(1);
+                adapter.setTrailerData(trailers);
+
+            } else {
+                Toast.makeText(DetailActivity.this, getString(R.string.no_data), Toast.LENGTH_LONG).show();
+            }
         }
     }
 }

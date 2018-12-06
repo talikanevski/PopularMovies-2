@@ -1,24 +1,20 @@
 package com.example.ded.movies;
 
-import android.app.Activity;
-import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.TrailerAdapterViewHolder> {
     private Trailer[] mTrailers;
     public static final String YOUTUBE_BASE_URL = "https://img.youtube.com/vi/";
     public static final String YOUTUBE_DEFAULT_THUMBNAIL = "/default.jpg";
-
 
     /**
      * An on-click handler that  defined to make it easy for an Activity to interface with
@@ -77,5 +73,8 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.TrailerA
         }
     }
 
-
+    public void setTrailerData(Trailer[] trailers) {
+        mTrailers = trailers;
+        notifyDataSetChanged();
+    }
 }

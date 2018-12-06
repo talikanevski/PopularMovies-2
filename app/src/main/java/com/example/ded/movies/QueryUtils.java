@@ -1,5 +1,6 @@
 package com.example.ded.movies;
 
+import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -19,7 +20,11 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
+import static com.example.ded.movies.MainActivity.API_Key;
+import static com.example.ded.movies.MainActivity.API_Key_Label;
+import static com.example.ded.movies.MainActivity.THE_MOVIE_DB_BASE_URL;
 import static com.example.ded.movies.MovieLoader.LOG_TAG;
 
 
@@ -27,6 +32,7 @@ import static com.example.ded.movies.MovieLoader.LOG_TAG;
  * Helper methods related to requesting and receiving movies from "The Movie DB".
  */
 final class QueryUtils {
+    final static String API_APPEND_TO_RESPONSE_PARAM = "append_to_response";
 
     private QueryUtils() {
     }
@@ -86,6 +92,21 @@ final class QueryUtils {
         }
         return url;
     }
+
+    //App requests for related videos for a selected movie via the /movie/{id}/videos endpoint
+    // in a background thread and displays those details when the user selects a movie.
+    //App requests for user reviews for a selected movie via the /movie/{id}/reviews endpoint
+    // in a background thread and displays those details when the user selects a movie.
+    /**
+     * Returns new URL object from the given movieId, to include trailers and reviews
+     */
+    public static URL trailersReviewsUrl(String movieId){
+        Uri uriBuilder = Uri.parse(THE_MOVIE_DB_BASE_URL + movieId).buildUpon()
+                .appendQueryParameter(API_Key_Label, API_Key)
+                .appendQueryParameter(API_APPEND_TO_RESPONSE_PARAM, "reviews,videos")
+                .build();
+       return createUrl(String.valueOf(uriBuilder));
+      }
 
     /**
      * Make an HTTP request to the given URL and return a String as the response.
@@ -190,10 +211,9 @@ final class QueryUtils {
         return extractFeatureFromJson(jsonResponse);
     }
 
-    private static List<Trailer> extractTrailersFromJson(String jsonResponse) {
+    public static List<Trailer> extractTrailersFromJson(DetailActivity.TrailersTask trailersTask, String jsonResponse) {
         String name;
         String key;
-
 
         /*If the JSON string is empty or null, then return early.**/
         if (TextUtils.isEmpty(jsonResponse)) {
@@ -210,7 +230,6 @@ final class QueryUtils {
 
             JSONArray resultsArray = videos.getJSONArray("results");
 
-
             for (int i = 0; i < resultsArray.length(); i++) {
                 JSONObject result = resultsArray.getJSONObject(i);
                 name = result.getString("name");
@@ -224,10 +243,34 @@ final class QueryUtils {
             /* an error is thrown when executing any of the above statements in the "try" block,
              // catch the exception here, so the app doesn't crash. Print a log message
              // with the message from the exception.**/
-            Log.e("QueryUtils", "Problem parsing the news JSON results", e);
+            Log.e("QueryUtils", "Problem parsing the trailers JSON results, extractTrailersFromJson", e);
         }
-        /* Return the list of movies  **/
+        /* Return the list of trailers  **/
         return trailers;
     }
+    /**
+     * This method returns the entire result from the HTTP response.
+     * AND\ud851-Sunshine-student\S03.02-Solution-RecyclerViewClickHandling
+     * @param url The URL to fetch the HTTP response from.
+     * @return The contents of the HTTP response.
+     * @throws IOException Related to network and stream reading
+     */
+    public static String getResponseFromHttpUrl(URL url) throws IOException {
+        HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+        try {
+            InputStream in = urlConnection.getInputStream();
 
+            Scanner scanner = new Scanner(in);
+            scanner.useDelimiter("\\A");
+
+            boolean hasInput = scanner.hasNext();
+            if (hasInput) {
+                return scanner.next();
+            } else {
+                return null;
+            }
+        } finally {
+            urlConnection.disconnect();
+        }
+    }
 }
