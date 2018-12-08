@@ -4,7 +4,7 @@
     <string name="no_movies">No Movies updates available, please reload the app or check after some time.</string>
 
     <!-- Error messages-->
-    <string name="detail_error_message">Sandwich data not available</string>
+    <string name="detail_error_message">Data not available</string>
 
     <string name="settings_title">Movie Settings</string>
 

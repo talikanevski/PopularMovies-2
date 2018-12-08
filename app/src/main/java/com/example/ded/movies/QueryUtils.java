@@ -1,5 +1,6 @@
 package com.example.ded.movies;
 
+import android.content.Context;
 import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Log;
@@ -24,8 +25,6 @@ import static com.example.ded.movies.MainActivity.API_Key;
 import static com.example.ded.movies.MainActivity.API_Key_Label;
 import static com.example.ded.movies.MainActivity.THE_MOVIE_DB_BASE_URL;
 import static com.example.ded.movies.MovieLoader.LOG_TAG;
-
-
 /**
  * Helper methods related to requesting and receiving movies from "The Movie DB".
  */
@@ -101,12 +100,11 @@ final class QueryUtils {
     /**
      * Returns new URL object from the given movieId, to include trailers and reviews
      */
-    public static URL trailersReviewsUrl(String movieId) {
+    public static URL trailersReviewsUrl(String movieId, String param) {
         Uri uriBuilder = Uri.parse(THE_MOVIE_DB_BASE_URL + movieId + "?" + API_Key_Label + API_Key).buildUpon()
 //                .appendQueryParameter(API_Key_Label, API_Key)
                 .appendQueryParameter(API_APPEND_TO_RESPONSE_PARAM, "reviews,videos")
                 .build();
-
 
         return createUrl(String.valueOf(uriBuilder));
     }
@@ -214,7 +212,7 @@ final class QueryUtils {
         return extractFeatureFromJson(jsonResponse);
     }
 
-    public static Trailer[] extractTrailersFromJson(DetailActivity.Task trailersTask, String jsonResponse) throws JSONException {
+    public static Trailer[] extractTrailersFromJson(DetailActivity.Task context, String jsonResponse) throws JSONException {
         /*If the JSON string is empty or null, then return early.**/
         if (TextUtils.isEmpty(jsonResponse)) {
             return null;
@@ -240,10 +238,10 @@ final class QueryUtils {
 
     public static Review[] extractReviewsFromJson(DetailActivity.Task context, String jsonResponse) throws JSONException {
 
-//        /*If the JSON string is empty or null, then return early.**/
-//        if (TextUtils.isEmpty(jsonResponse)) {
-//            return null;
-//        }
+        /*If the JSON string is empty or null, then return early.**/
+        if (TextUtils.isEmpty(jsonResponse)) {
+            return null;
+        }
 
         JSONObject baseJsonResponse = new JSONObject(jsonResponse);
         JSONObject r = baseJsonResponse.getJSONObject("reviews");

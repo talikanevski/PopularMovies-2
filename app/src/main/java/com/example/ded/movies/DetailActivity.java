@@ -2,6 +2,7 @@ package com.example.ded.movies;
 
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -21,9 +22,12 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.example.ded.movies.TrailerAdapter.YOUTUBE_BASE_URL;
+
 public class DetailActivity extends AppCompatActivity implements TrailerAdapter.ListItemClickListener {
 
     public static final String CURRENT_MOVIE = "current_movie";
+    private static final String YOUTUBE_URL = "https://www.youtube.com/watch?v=";
     ActivityDetailBinding mBinding; //Create a data binding instance. This class was generated based on the name of the xml layout
     private com.example.ded.movies.TrailerAdapter adapter;
     private com.example.ded.movies.ReviewAdapter reviewAdapter;
@@ -43,7 +47,7 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
         mBinding.rvTrailers.setAdapter(adapter);
 
         // set up recyclerview and adapter to display the reviews
-        LinearLayoutManager reviewsLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        LinearLayoutManager reviewsLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         mBinding.rvReviews.setLayoutManager(reviewsLayoutManager);
         reviewAdapter = new com.example.ded.movies.ReviewAdapter( this);
         mBinding.rvReviews.setAdapter(reviewAdapter);
@@ -96,8 +100,12 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
     }
 
     @Override
-    public void onClick(Trailer clickedItem) {
-
+    public void onClick(Trailer clickedTrailer) {
+    Uri trailerUri = Uri.parse(YOUTUBE_URL + clickedTrailer.getTrailerKey());
+        /**Create a new intent to view the trailer URI**/
+        Intent websiteIntent = new Intent(Intent.ACTION_VIEW, trailerUri);
+        /** Send the intent to launch a new activity**/
+        startActivity(websiteIntent);
     }
 
     // in a background thread get ArrayList of the trailers and reviews for selected movie
@@ -106,11 +114,11 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
 
         @Override
         protected List<Object> doInBackground(String... params) {
-            URL trailerUrl = QueryUtils.trailersReviewsUrl(params[0]);
+            URL trailersReviewsUrl = QueryUtils.trailersReviewsUrl(params[0], params[1]);
 
             String response = null;
             try {
-                response = QueryUtils.getResponseFromHttpUrl(trailerUrl);
+                response = QueryUtils.getResponseFromHttpUrl(trailersReviewsUrl);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -130,16 +138,15 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
                 trailersPlusReviews.add(trailers);
                 trailersPlusReviews.add(reviews);
                 return trailersPlusReviews;
-
         }
 
         @Override
-        protected void onPostExecute(List<Object> listOfTrailersPlusReviews) {
-            if (listOfTrailersPlusReviews != null) {
-                Trailer[] trailers = (Trailer[]) listOfTrailersPlusReviews.get(0);
+        protected void onPostExecute(List<Object> trailersPlusReviews) {
+            if (trailersPlusReviews != null) {
+                Trailer[] trailers = (Trailer[]) trailersPlusReviews.get(0);
                 adapter.setTrailerData(trailers);
 
-                Review [] reviews = (Review[]) listOfTrailersPlusReviews.get(1);
+                Review [] reviews = (Review[]) trailersPlusReviews.get(1);
                 reviewAdapter.setReviewData(reviews);
 
             } else {

@@ -4,9 +4,12 @@ public class Trailer {
     String trailerName;
     String trailerKey;
 
-    public Trailer() {}
+    public Trailer() {
+    }
 
-    public String getTrailerName () {return trailerName;}
+    public String getTrailerName() {
+        return trailerName;
+    }
 
     public void setTrailerName(String trailerName) {
         this.trailerName = trailerName;
@@ -16,5 +19,7 @@ public class Trailer {
         this.trailerKey = trailerKey;
     }
 
-    public String getTrailerKey() {return trailerKey;}
+    public String getTrailerKey() {
+        return trailerKey;
+    }
 }
