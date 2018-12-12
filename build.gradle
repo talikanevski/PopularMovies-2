@@ -19,6 +19,7 @@ allprojects {
     repositories {
         google()
         jcenter()
+        maven { url 'https://maven.google.com' } // https://stackoverflow.com/questions/44090003/how-to-use-new-features-in-constraint-layout-1-1
     }
 }
 

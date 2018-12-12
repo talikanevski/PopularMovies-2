@@ -40,47 +40,77 @@
 
                 <TextView
                     android:id="@+id/title"
-                    android:layout_width="180dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginTop="16dp"
                     android:textColor="@color/colorPrimary"
                     android:textSize="22sp"
                     app:layout_constraintStart_toEndOf="@+id/poster"
                     app:layout_constraintTop_toBottomOf="@+id/backdrop" />
 
-                <TextView
-                    android:id="@+id/release_date"
+
+                <android.support.constraint.Barrier
+                    android:id="@+id/barrier"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginTop="8dp"
-                    android:textColor="#FFFFFF"
-                    android:textSize="15sp"
-                    app:layout_constraintStart_toEndOf="@+id/poster"
-                    app:layout_constraintTop_toBottomOf="@+id/title" />
-
-                <TextView
-                    android:id="@+id/avg_rating"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginLeft="24dp"
-                    android:layout_marginTop="170dp"
-                    android:layout_marginEnd="24dp"
-                    android:layout_marginRight="8dp"
-                    android:background="@color/colorPrimaryDark"
-                    android:padding="8dp"
-                    android:textColor="#FFFFFF"
-                    android:textSize="20sp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintTop_toTopOf="@+id/backdrop" />
-
+                    app:barrierDirection="bottom"
+                    app:constraint_referenced_ids="poster,ll,linearLayout" />
 
                 <LinearLayout
+                    android:id="@+id/ll"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginLeft="24dp"
+                    android:layout_marginTop="16dp"
+                    android:orientation="horizontal"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/poster">
+
+                    <TextView
+                        android:id="@+id/release_date_label"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"
+                        android:text="Release Date:"
+                        android:textColor="#FFFFFF"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/release_date"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.5"
+                        android:textColor="#FFFFFF" />
+
+                    <TextView
+                        android:id="@+id/rating_label"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Rating:"
+                        android:textColor="#FF5252"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/avg_rating"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textColor="#FF5252"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/linearLayout"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="24dp"
@@ -90,8 +120,9 @@
                     android:layout_marginRight="24dp"
                     android:orientation="vertical"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/poster">
+                    app:layout_constraintTop_toBottomOf="@+id/ll">
 
                     <TextView
                         android:id="@+id/textView"
@@ -107,6 +138,7 @@
                         android:id="@+id/overview"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
                         android:textColor="#FFFFFF"
                         android:textSize="15sp" />
 
@@ -139,9 +171,6 @@
                         android:layout_height="wrap_content" />
                 </LinearLayout>
 
-
-            </android.support.constraint.ConstraintLayout>
-
                 <android.support.design.widget.FloatingActionButton
                     android:id="@+id/floatingActionButton"
                     android:layout_width="wrap_content"
@@ -149,18 +178,24 @@
                     android:layout_gravity="right"
                     android:layout_margin="16dp"
                     android:clickable="true"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/share"
                     app:srcCompat="@drawable/favorites" />
 
-            <android.support.design.widget.FloatingActionButton
-                android:id="@+id/share"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="right"
-                android:layout_marginEnd="16dp"
-                android:layout_marginRight="16dp"
-                android:clickable="true"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:srcCompat="@drawable/ic_share" />
+                <android.support.design.widget.FloatingActionButton
+                    android:id="@+id/share"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:layout_margin="16dp"
+
+                    android:clickable="true"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ic_share" />
+
+            </android.support.constraint.ConstraintLayout>
+
 
         </android.support.design.widget.CoordinatorLayout>
     </ScrollView>

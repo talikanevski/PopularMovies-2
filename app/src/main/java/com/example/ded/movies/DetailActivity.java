@@ -73,7 +73,7 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
 
             /* Find the TextView in the activity_detail.xml layout with releaseDate**/
             TextView releaseDateTextView = findViewById(R.id.release_date);
-            releaseDateTextView.setText(currentMovie.getReleaseDate().substring(0, 4));
+            releaseDateTextView.setText(currentMovie.getReleaseDate()); //.substring(0, 4)
 
             /* Find the TextView in the activity_detail.xml_detail.xml layout with userRating**/
             TextView userRatingTextView = findViewById(R.id.avg_rating);

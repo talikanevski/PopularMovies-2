@@ -54,4 +54,5 @@ dependencies {
     implementation "com.android.support:animated-vector-drawable:${supportLibVersion}" // AnimatedVectorDrawableCompat
     implementation "com.android.support:transition:${supportLibVersion}"
     androidTestImplementation 'junit:junit:4.12'
+
 }
