@@ -1,4 +1,4 @@
-package com.example.ded.movies;
+package com.example.ded.movies.Adapters;
 
 import android.app.Activity;
 import android.content.Context;
@@ -9,11 +9,13 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 
+import com.example.ded.movies.Models.Movie;
+import com.example.ded.movies.R;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
-class MovieAdapter extends ArrayAdapter<Movie> {
+public class MovieAdapter extends ArrayAdapter<Movie> {
 
     private final Context mContext;
 

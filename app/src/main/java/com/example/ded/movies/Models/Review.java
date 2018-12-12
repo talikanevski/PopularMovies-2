@@ -1,4 +1,4 @@
-package com.example.ded.movies;
+package com.example.ded.movies.Models;
 
 public class Review {
     String author;

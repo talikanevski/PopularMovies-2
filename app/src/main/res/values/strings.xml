@@ -26,5 +26,6 @@
     <string name="popular">Popular</string>
     <string name="top_rated">Top Rated</string>
     <string name="no_data">Please check your Internet connection and try again</string>
+    <string name="favorites">Favorites</string>
 
 </resources>

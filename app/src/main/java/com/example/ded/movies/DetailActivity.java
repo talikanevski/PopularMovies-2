@@ -7,11 +7,15 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.ded.movies.Adapters.ReviewAdapter;
+import com.example.ded.movies.Adapters.TrailerAdapter;
+import com.example.ded.movies.Models.Movie;
+import com.example.ded.movies.Models.Review;
+import com.example.ded.movies.Models.Trailer;
 import com.example.ded.movies.databinding.ActivityDetailBinding;//This class was generated based on the name of the xml layout
 import com.squareup.picasso.Picasso;
 
@@ -22,15 +26,13 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.ded.movies.TrailerAdapter.YOUTUBE_BASE_URL;
-
 public class DetailActivity extends AppCompatActivity implements TrailerAdapter.ListItemClickListener {
 
     public static final String CURRENT_MOVIE = "current_movie";
     private static final String YOUTUBE_URL = "https://www.youtube.com/watch?v=";
     ActivityDetailBinding mBinding; //Create a data binding instance. This class was generated based on the name of the xml layout
-    private com.example.ded.movies.TrailerAdapter adapter;
-    private com.example.ded.movies.ReviewAdapter reviewAdapter;
+    private TrailerAdapter adapter;
+    private ReviewAdapter reviewAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,13 +45,13 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
         // set up recyclerview and adapter to display the trailers
         LinearLayoutManager trailersLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         mBinding.rvTrailers.setLayoutManager(trailersLayoutManager);
-        adapter = new com.example.ded.movies.TrailerAdapter( this);
+        adapter = new TrailerAdapter( this);
         mBinding.rvTrailers.setAdapter(adapter);
 
         // set up recyclerview and adapter to display the reviews
         LinearLayoutManager reviewsLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         mBinding.rvReviews.setLayoutManager(reviewsLayoutManager);
-        reviewAdapter = new com.example.ded.movies.ReviewAdapter( this);
+        reviewAdapter = new ReviewAdapter( this);
         mBinding.rvReviews.setAdapter(reviewAdapter);
 
         Intent intent = getIntent();
@@ -114,23 +116,23 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
 
         @Override
         protected List<Object> doInBackground(String... params) {
-            URL trailersReviewsUrl = QueryUtils.trailersReviewsUrl(params[0], params[1]);
+            URL trailersReviewsUrl = Utils.trailersReviewsUrl(params[0], params[1]);
 
             String response = null;
             try {
-                response = QueryUtils.getResponseFromHttpUrl(trailersReviewsUrl);
+                response = Utils.getResponseFromHttpUrl(trailersReviewsUrl);
             } catch (IOException e) {
                 e.printStackTrace();
             }
             Trailer []trailers = new Trailer[0];
             try {
-                trailers = QueryUtils.extractTrailersFromJson(this, response);
+                trailers = Utils.extractTrailersFromJson(this, response);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            Review [] reviews = new Review[0];
+            Review[] reviews = new Review[0];
             try {
-                reviews = QueryUtils.extractReviewsFromJson(this, response);
+                reviews = Utils.extractReviewsFromJson(this, response);
             } catch (JSONException e) {
                 e.printStackTrace();
             }

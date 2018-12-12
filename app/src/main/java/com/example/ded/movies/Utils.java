@@ -1,9 +1,12 @@
 package com.example.ded.movies;
 
-import android.content.Context;
 import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Log;
+
+import com.example.ded.movies.Models.Movie;
+import com.example.ded.movies.Models.Review;
+import com.example.ded.movies.Models.Trailer;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -28,10 +31,10 @@ import static com.example.ded.movies.MovieLoader.LOG_TAG;
 /**
  * Helper methods related to requesting and receiving movies from "The Movie DB".
  */
-final class QueryUtils {
+final class Utils {
     final static String API_APPEND_TO_RESPONSE_PARAM = "append_to_response";//use for trailers and reviews
 
-    private QueryUtils() {
+    private Utils() {
     }
 
     private static List<Movie> extractFeatureFromJson(String jsonResponse) {
@@ -73,7 +76,7 @@ final class QueryUtils {
             /* an error is thrown when executing any of the above statements in the "try" block,
              // catch the exception here, so the app doesn't crash. Print a log message
              // with the message from the exception.**/
-            Log.e("QueryUtils", "Problem parsing the news JSON results", e);
+            Log.e("Utils", "Problem parsing the news JSON results", e);
         }
         /* Return the list of movies  **/
         return movies;
@@ -173,8 +176,8 @@ final class QueryUtils {
 
     /* the fetchData() helper method that ties all the steps together -
       creating a URL, sending the request, processing the response.
-      Since this is the only “public” QueryUtils method that the MovieAsyncTask needs to interact with,
-      make all other helper methods in QueryUtils “private”.**/
+      Since this is the only “public” Utils method that the MovieAsyncTask needs to interact with,
+      make all other helper methods in Utils “private”.**/
 
     /**
      * Query the The MovieDB data set and return a list of Movie objects.

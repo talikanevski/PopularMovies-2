@@ -1,6 +1,5 @@
-package com.example.ded.movies;
+package com.example.ded.movies.Adapters;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -9,6 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.example.ded.movies.R;
+import com.example.ded.movies.Models.Trailer;
 import com.squareup.picasso.Picasso;
 
 public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.TrailerAdapterViewHolder> {

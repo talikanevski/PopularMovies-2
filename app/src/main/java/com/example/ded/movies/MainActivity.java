@@ -17,6 +17,9 @@ import android.widget.GridView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.example.ded.movies.Adapters.MovieAdapter;
+import com.example.ded.movies.Models.Movie;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -214,6 +217,10 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             case R.id.navigation_top_rated:
                 THE_MOVIE_DB_URL = THE_MOVIE_DB_BASE_URL + TOP_RATED + API_Key_Label + API_Key;
                 new MovieLoader(this, THE_MOVIE_DB_URL);
+                reload();
+                return true;
+            case R.id.navigation_favorites:
+                // TODO (1) add what need to be added
                 reload();
                 return true;
         }
