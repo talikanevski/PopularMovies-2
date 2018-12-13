@@ -19,9 +19,13 @@ import android.widget.TextView;
 
 import com.example.ded.movies.Adapters.MovieAdapter;
 import com.example.ded.movies.Models.Movie;
+import com.example.ded.movies.ROOM.AppDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.example.ded.movies.ROOM.AppDatabase;
+import com.example.ded.movies.ROOM.FavoriteMovieDao;
 
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List<Movie>> {
     private static final String LOG_TAG = MainActivity.class.getName();
@@ -47,6 +51,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
      * TextView that is displayed when the list is empty
      **/
     private TextView mEmptyStateTextView;
+
+    //  Creation AppDatabase member variable for the Database
+    private AppDatabase mDb;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -128,6 +135,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             /* Update empty state with no connection error message**/
             mEmptyStateTextView.setText(R.string.no_internet);
         }
+
+        //  Initialization of member variable for the data base
+        mDb = AppDatabase.getInstance(getApplicationContext());
     }
 
 
@@ -180,6 +190,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     private void reload() {
         getLoaderManager().restartLoader(MOVIES_LOADER_ID, null, this);
+
     }
 
     private void launchDetailActivity(Movie currentMovie) {
@@ -210,7 +221,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.navigation_popular:
-                THE_MOVIE_DB_URL = THE_MOVIE_DB_BASE_URL +POPULAR + API_Key_Label + API_Key;
+                THE_MOVIE_DB_URL = THE_MOVIE_DB_BASE_URL + POPULAR + API_Key_Label + API_Key;
                 new MovieLoader(this, THE_MOVIE_DB_URL);
                 reload();
                 return true;
@@ -225,6 +236,20 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 return true;
         }
         return false;
+    }
+
+    /**
+     * This method is called after this activity has been paused or restarted.
+     * Often, this is after new data has been inserted through an FAB that add the movie to favorites,
+     * so this re-queries the database data for any changes.
+     */
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //  Call the adapter's setFavoriteMovies method using the result
+        // of the loadFavoriteMovies method from the FavoriteMovieDao
+        //TODO
+//        mAdapter.setFavoriteMovies(mDb.FavoriteMovieDao().loadFavoriteMovies());
     }
 
 }

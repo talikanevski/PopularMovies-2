@@ -5,8 +5,10 @@ import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -16,8 +18,9 @@ import com.example.ded.movies.Adapters.TrailerAdapter;
 import com.example.ded.movies.Models.Movie;
 import com.example.ded.movies.Models.Review;
 import com.example.ded.movies.Models.Trailer;
+import com.example.ded.movies.ROOM.AppDatabase;
+import com.example.ded.movies.ROOM.FavoriteMovieEntity;
 import com.example.ded.movies.databinding.ActivityDetailBinding;//This class was generated based on the name of the xml layout
-import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
 
@@ -26,6 +29,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.squareup.picasso.Picasso.with;
+
 public class DetailActivity extends AppCompatActivity implements TrailerAdapter.ListItemClickListener {
 
     public static final String CURRENT_MOVIE = "current_movie";
@@ -33,6 +38,18 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
     ActivityDetailBinding mBinding; //Create a data binding instance. This class was generated based on the name of the xml layout
     private TrailerAdapter adapter;
     private ReviewAdapter reviewAdapter;
+    public Movie currentMovie;
+    //  AppDatabase member variable for the Database
+    private AppDatabase mDb;
+    TextView titleTextView;
+    TextView overviewTextView;
+    TextView releaseDateTextView;
+    TextView userRatingTextView;
+    ImageView posterImage;
+    ImageView backdrop;
+    FloatingActionButton fabFavorite;
+    FloatingActionButton fabShare;
+    boolean isFavorite;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,54 +62,101 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
         // set up recyclerview and adapter to display the trailers
         LinearLayoutManager trailersLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         mBinding.rvTrailers.setLayoutManager(trailersLayoutManager);
-        adapter = new TrailerAdapter( this);
+        adapter = new TrailerAdapter(this);
         mBinding.rvTrailers.setAdapter(adapter);
 
         // set up recyclerview and adapter to display the reviews
         LinearLayoutManager reviewsLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         mBinding.rvReviews.setLayoutManager(reviewsLayoutManager);
-        reviewAdapter = new ReviewAdapter( this);
+        reviewAdapter = new ReviewAdapter(this);
         mBinding.rvReviews.setAdapter(reviewAdapter);
+
+        //  Initializing member variable for the data base
+        mDb = AppDatabase.getInstance(getApplicationContext());
 
         Intent intent = getIntent();
         if (intent == null) {
             closeOnError();
         } else {
-            Movie currentMovie = intent.getParcelableExtra(CURRENT_MOVIE);
+            currentMovie = intent.getParcelableExtra(CURRENT_MOVIE);
 
             /* Find the TextView in the activity_detail.xml layout with title**/
-            TextView titleTextView = findViewById(R.id.title);
+            titleTextView = findViewById(R.id.title);
 
             /* Get the version name from the current Movie object and set this text on the name TextView**/
             // Display the title of the current movie in that TextView
             titleTextView.setText(currentMovie.getTitle());
 
             /* Find the TextView in the activity_detail.xml layout with overview**/
-            TextView overviewTextView = findViewById(R.id.overview);
+            overviewTextView = findViewById(R.id.overview);
             overviewTextView.setText(currentMovie.getOverview());
 
             /* Find the TextView in the activity_detail.xml layout with releaseDate**/
-            TextView releaseDateTextView = findViewById(R.id.release_date);
+            releaseDateTextView = findViewById(R.id.release_date);
             releaseDateTextView.setText(currentMovie.getReleaseDate()); //.substring(0, 4)
 
             /* Find the TextView in the activity_detail.xml_detail.xml layout with userRating**/
-            TextView userRatingTextView = findViewById(R.id.avg_rating);
+            userRatingTextView = findViewById(R.id.avg_rating);
             userRatingTextView.setText(currentMovie.getUserRating());
 
             /* Find the View in the activity_detail.xml_detail.xml layout with the poster of the of the current movie**/
-            ImageView posterImage = findViewById(R.id.poster);
-
-            Picasso.with(this)
+            posterImage = findViewById(R.id.poster);
+            with(this)
                     .load("https://image.tmdb.org/t/p/w185" + currentMovie.getPoster())
                     .into(posterImage);
 
             /* Find the View in the activity_detail.xml layout with the poster of the of the current movie**/
-            ImageView backdrop = findViewById(R.id.backdrop);
+            backdrop = findViewById(R.id.backdrop);
 
-            Picasso.with(this)
+            with(this)
                     .load("https://image.tmdb.org/t/p/w185" + currentMovie.getPoster())
                     .into(backdrop);
+
             loadTrailersPlusReviews(currentMovie.getId());
+
+            // Setup FAB to add the movie to favorites
+            fabFavorite = (FloatingActionButton) findViewById(R.id.favorive_fab);
+            fabFavorite.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    favoriteButtonClicked();
+                }
+            });
+            // Setup FAB to share the movie's trailer
+            //Implement sharing functionality to allow the user to share the first trailer’s YouTube URL from the movie details screen.
+            fabShare = (FloatingActionButton) findViewById(R.id.share_fab);
+            fabShare.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //TODO
+                    Intent i = new Intent();
+                    i.setType("text/plain");
+                    i.setAction(Intent.ACTION_SEND);
+                    i.putExtra(Intent.EXTRA_TEXT, "");//TODO
+                    startActivity(i);
+                }
+            });
+        }
+    }
+
+    private void favoriteButtonClicked() {
+        //TODO insert logic whether the movie already marked as favorite ot not - use boolean or check what is a drawable resource or if it is in the database already
+        if (!isFavorite) {
+            String title = currentMovie.getTitle();
+            String overview = currentMovie.getOverview();
+            String releaseDate = currentMovie.getReleaseDate();
+            String userRating = currentMovie.getUserRating();
+            String poster = currentMovie.getPoster();
+            // Creation FavoriteMovieEntity variable using the variables defined above
+            FavoriteMovieEntity favoriteMovieEntity;
+            favoriteMovieEntity = new FavoriteMovieEntity(title, overview, releaseDate, userRating, poster, backdrop, currentMovie.getId());
+            //  Use the taskDao in the AppDatabase variable to insert the FavoriteMovieEntity
+            mDb.favoriteMovieDao().insertMovie(favoriteMovieEntity);
+            fabFavorite.setImageResource(R.drawable.favorites_red);
+            isFavorite = true;
+        } else {//TODO
+            fabFavorite.setImageResource(R.drawable.favorites);
+            isFavorite = false;
         }
     }
 
@@ -103,7 +167,7 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
 
     @Override
     public void onClick(Trailer clickedTrailer) {
-    Uri trailerUri = Uri.parse(YOUTUBE_URL + clickedTrailer.getTrailerKey());
+        Uri trailerUri = Uri.parse(YOUTUBE_URL + clickedTrailer.getTrailerKey());
         /**Create a new intent to view the trailer URI**/
         Intent websiteIntent = new Intent(Intent.ACTION_VIEW, trailerUri);
         /** Send the intent to launch a new activity**/
@@ -124,7 +188,7 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            Trailer []trailers = new Trailer[0];
+            Trailer[] trailers = new Trailer[0];
             try {
                 trailers = Utils.extractTrailersFromJson(this, response);
             } catch (JSONException e) {
@@ -137,9 +201,9 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
                 e.printStackTrace();
             }
             List<Object> trailersPlusReviews = new ArrayList<Object>();
-                trailersPlusReviews.add(trailers);
-                trailersPlusReviews.add(reviews);
-                return trailersPlusReviews;
+            trailersPlusReviews.add(trailers);
+            trailersPlusReviews.add(reviews);
+            return trailersPlusReviews;
         }
 
         @Override
@@ -148,7 +212,7 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
                 Trailer[] trailers = (Trailer[]) trailersPlusReviews.get(0);
                 adapter.setTrailerData(trailers);
 
-                Review [] reviews = (Review[]) trailersPlusReviews.get(1);
+                Review[] reviews = (Review[]) trailersPlusReviews.get(1);
                 reviewAdapter.setReviewData(reviews);
 
             } else {
@@ -157,7 +221,7 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
         }
     }
 
-    private void loadTrailersPlusReviews(String movieId){
+    private void loadTrailersPlusReviews(String movieId) {
         new Task().execute(movieId, null, null);
     }
 }

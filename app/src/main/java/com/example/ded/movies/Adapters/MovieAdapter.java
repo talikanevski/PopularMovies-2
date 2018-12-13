@@ -11,13 +11,18 @@ import android.widget.ImageView;
 
 import com.example.ded.movies.Models.Movie;
 import com.example.ded.movies.R;
+import com.example.ded.movies.ROOM.FavoriteMovieEntity;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MovieAdapter extends ArrayAdapter<Movie> {
 
     private final Context mContext;
+
+    // Class variables for the List that holds favorite movies data and the Context
+    private List<FavoriteMovieEntity> mFavoriteMovie;
 
     public MovieAdapter(Activity context, ArrayList<Movie> movies) {
         /*
@@ -42,7 +47,7 @@ public class MovieAdapter extends ArrayAdapter<Movie> {
         /*Get the Movie object located at this position in the list**/
         final Movie currentMovie = getItem(position);
 
-        /* Find the View in the activity_detail.xml layout with the poster of thecurrent movie**/
+        /* Find the View in the activity_detail.xml layout with the poster of the current movie**/
         ImageView posterImage = listItemView.findViewById(R.id.grid_poster);
 
         assert currentMovie != null;
@@ -52,5 +57,15 @@ public class MovieAdapter extends ArrayAdapter<Movie> {
 
         /*Return the list activity_detail view that is now showing the appropriate data**/
         return listItemView;
+    }
+
+
+    /**
+     * When data changes, this method updates the list of FavoriteMovieEntity
+     * and notifies the adapter to use the new values on it
+     */
+    public void setFavoriteMovies(List<FavoriteMovieEntity> favoriteMovies) {
+        mFavoriteMovie = favoriteMovies;
+        notifyDataSetChanged();
     }
 }

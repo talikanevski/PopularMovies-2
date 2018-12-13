@@ -3,6 +3,7 @@ package com.example.ded.movies.ROOM;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
+import android.widget.ImageView;
 
 @Entity(tableName = "favorite_movies")
 // PrimaryKey is the id of the favorite movie.
@@ -23,14 +24,15 @@ public class FavoriteMovieEntity {
     // and the second constructor I''ll use after the FavoriteMovieEntity was created, to be able to delete it if needed
     // so I just add @Ignore to the first one
     @Ignore
-    public FavoriteMovieEntity(String title, String overview, String releaseDate, String userRating, String poster, String backdrop, String backdropId) {
+    public FavoriteMovieEntity(String title, String overview, String releaseDate, String userRating, String poster, ImageView backdrop, String backdropId) {
         this.title = title;
         this.overview = overview;
         this.releaseDate = releaseDate;
         this.userRating = userRating;
         this.poster = poster;
-        this.backdrop = backdrop;
+        this.backdrop = String.valueOf(backdrop);
         this.backdropId = backdropId;  /** backdrop**/
+        //TODO add trailers and reviews!!!
     }
 
     public FavoriteMovieEntity(int id, String title, String overview, String releaseDate, String userRating, String poster, String backdrop, String backdropId) {
