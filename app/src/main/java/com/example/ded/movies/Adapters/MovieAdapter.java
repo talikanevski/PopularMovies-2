@@ -1,71 +1,114 @@
 package com.example.ded.movies.Adapters;
 
-import android.app.Activity;
 import android.content.Context;
-import android.support.annotation.NonNull;
+import android.content.Intent;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 
+import com.example.ded.movies.DetailActivity;
 import com.example.ded.movies.Models.Movie;
 import com.example.ded.movies.R;
 import com.example.ded.movies.ROOM.FavoriteMovieEntity;
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class MovieAdapter extends ArrayAdapter<Movie> {
+public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapterViewHolder> {
 
-    private final Context mContext;
+    Context mContext;
+    private List<Movie> mMovies;
+    Movie currentMovie;
+    String posterUrl;
+    /**
+     * An on-click handler that  defined to make it easy for an Activity to interface with
+     * RecyclerView
+     */
+    private static MovieAdapter.ListItemClickListener mOnClickListener;
 
-    // Class variables for the List that holds favorite movies data and the Context
-    private List<FavoriteMovieEntity> mFavoriteMovie;
 
-    public MovieAdapter(Activity context, ArrayList<Movie> movies) {
-        /*
-         the second argument is used when the ArrayAdapter is populating a single TextView.
-         Because this is a custom adapter for more then 1 TextView , the adapter is not going to use
-         this second argument, so it can be any value. Here, I used 0.
-         */
-        super(context, 0, movies);
-        mContext = context;
+    /**
+     * Add a ListItemClickListener as a parameter to the constructor and store it in mOnClickListener
+     **/
+    public void setClickListener(MovieAdapter.ListItemClickListener movieAdapterOnClickHandler) {
+        mOnClickListener = movieAdapterOnClickHandler;
+    }
+    // data is passed into the constructor
+    public MovieAdapter(Context context, List<Movie> movies) {
+        this.mMovies = movies;
+        this.mContext = context;
+
     }
 
-    @NonNull
     @Override
-    public View getView(int position, View convertView, @NonNull ViewGroup parent) {
-        /* Check if the existing view is being reused, otherwise inflate the view**/
-        View listItemView = convertView;
-        if (listItemView == null) {
-            listItemView = LayoutInflater.from(getContext()).inflate(
-                    R.layout.grid_item, parent, false);
+    public MovieAdapterViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        mContext = parent.getContext();
+        View view = LayoutInflater.from(mContext).inflate(R.layout.poster_item, parent, false);
+        return new MovieAdapterViewHolder(view);
+    }
+
+    public static class MovieAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+
+        public static ImageView posterImage = null;
+        public final View mView;
+
+        public MovieAdapterViewHolder(View view) {
+            super(view);
+            mView = view;
+            /* Find the View in the poster_item.xml layout with the poster of the current movie**/
+            posterImage = view.findViewById(R.id.poster);
         }
 
-        /*Get the Movie object located at this position in the list**/
-        final Movie currentMovie = getItem(position);
-
-        /* Find the View in the activity_detail.xml layout with the poster of the current movie**/
-        ImageView posterImage = listItemView.findViewById(R.id.grid_poster);
-
-        assert currentMovie != null;
-        Picasso.with(mContext)
-                .load("https://image.tmdb.org/t/p/w185" + currentMovie.getPoster())
-                .into(posterImage);
-
-        /*Return the list activity_detail view that is now showing the appropriate data**/
-        return listItemView;
+        @Override
+        public void onClick(View view) {
+            mOnClickListener.onClick(getAdapterPosition());
+        }
     }
 
+    @Override
+    public void onBindViewHolder(MovieAdapterViewHolder movieAdapterViewHolder, int position) {
+        /*Get the Movie object located at this position in the list**/
+//        final int intCurrentMovie = movieAdapterViewHolder.getAdapterPosition(); // TODO Kxm....Hm...
+        currentMovie = mMovies.get(position);
+
+        posterUrl = "https://image.tmdb.org/t/p/w185" + currentMovie.getPoster();
+        assert currentMovie != null;
+        Picasso.with(mContext)
+                .load(posterUrl)
+                .into(MovieAdapterViewHolder.posterImage);
+        MovieAdapterViewHolder.posterImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Context context = v.getContext();
+                Intent intent = new Intent(context, DetailActivity.class);
+                intent.putExtra(DetailActivity.CURRENT_MOVIE, currentMovie);
+
+                context.startActivity(intent);
+            }
+        });
+    }
+
+    @Override
+    public int getItemCount() {
+        return mMovies.size();
+    }
+
+    /**
+     * The interface that receives onClick messages.
+     */
+    public interface ListItemClickListener {
+        void onClick(int clickedItem);
+    }
 
     /**
      * When data changes, this method updates the list of FavoriteMovieEntity
      * and notifies the adapter to use the new values on it
      */
     public void setFavoriteMovies(List<FavoriteMovieEntity> favoriteMovies) {
-        mFavoriteMovie = favoriteMovies;
+//        mFavoriteMovie = favoriteMovies;
         notifyDataSetChanged();
     }
 }
+

@@ -56,7 +56,7 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
         super.onCreate(savedInstanceState);
         // set the Content View using DataBindingUtil to the detail_activity layout
         // DataBindUtil.setContentView replaces our normal call of setContent view:
-        // " setContentView(R.layout.activity_detail); "\
+        // " setContentView(R.layout.activity_detail); "
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_detail);
 
         // set up recyclerview and adapter to display the trailers

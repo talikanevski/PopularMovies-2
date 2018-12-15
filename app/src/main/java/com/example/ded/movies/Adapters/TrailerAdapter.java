@@ -32,7 +32,7 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.TrailerA
         void onClick(Trailer clickedItem);
     }
 
-    // Add a ListItemClickListener as a parameter to the constructor and store it in mOnClickListener
+    /** Add a ListItemClickListener as a parameter to the constructor and store it in mOnClickListener**/
     public TrailerAdapter(ListItemClickListener trailerAdapterOnClickHandler) {
         mOnClickListener = trailerAdapterOnClickHandler;
     }
