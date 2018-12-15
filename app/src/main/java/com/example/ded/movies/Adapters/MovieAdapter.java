@@ -19,7 +19,7 @@ import java.util.List;
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapterViewHolder> {
 
     Context mContext;
-    private List<Movie> mMovies;
+    private List<Movie> movieList;
     Movie currentMovie;
     String posterUrl;
     /**
@@ -37,7 +37,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
     }
     // data is passed into the constructor
     public MovieAdapter(Context context, List<Movie> movies) {
-        this.mMovies = movies;
+        this.movieList = movies;
         this.mContext = context;
 
     }
@@ -71,7 +71,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
     public void onBindViewHolder(MovieAdapterViewHolder movieAdapterViewHolder, int position) {
         /*Get the Movie object located at this position in the list**/
 //        final int intCurrentMovie = movieAdapterViewHolder.getAdapterPosition(); // TODO Kxm....Hm...
-        currentMovie = mMovies.get(position);
+        currentMovie = movieList.get(position);
 
         posterUrl = "https://image.tmdb.org/t/p/w185" + currentMovie.getPoster();
         assert currentMovie != null;
@@ -92,7 +92,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
 
     @Override
     public int getItemCount() {
-        return mMovies.size();
+        return movieList != null ? movieList.size() : 0;
     }
 
     /**
@@ -110,5 +110,11 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
 //        mFavoriteMovie = favoriteMovies;
         notifyDataSetChanged();
     }
+
+    // convenience method for getting data at click position
+    Movie getItem(int id) {
+        return movieList.get(id);
+    }
+
 }
 

@@ -48,7 +48,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     /**
      * TextView that is displayed when the list is empty
      **/
-    private TextView mEmptyStateTextView;//TODO erase
 
     ActivityMainBinding mBinding;
     //Create a data binding instance. This class was generated based on the name of the xml layout
@@ -70,12 +69,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         // " setContentView(R.layout.activity_main); "
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
-        /* Find a reference to the {@link ListView} in the layout**/
-//        GridView moviesGridView = findViewById(R.id.rv);//TODO erase
-
-//        mEmptyStateTextView = findViewById(R.id.emptyView); //TODO erase
-//        moviesGridView.setEmptyView(mEmptyStateTextView); //TODO erase
-
         // set up recyclerView and adapter to display the posters
         mRv = mBinding.rv;
         mEmptyView = mBinding.emptyView;
@@ -86,26 +79,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
         mRv.setAdapter(mAdapter);
         mAdapter.setClickListener(this);
-
-
-        /*Create a new {@link ArrayAdapter} of movies
-         // Create a new adapter that takes an empty list of movies as input**/
-//        mAdapter = new MovieAdapter(this, new ArrayList<Movie>());//TODO erase
-
-        /*Set the adapter on the {@link ListView}
-         // so the list can be populated in the user interface**/
-//        moviesGridView.setAdapter(mAdapter); //TODO erase
-
-        /* Set an activity_detail click listener on the ListView, which sends an intent to **/ //TODO erase
-//        mRv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-//                /*Find the current news article that was clicked on**/
-//                Movie currentMovie = mAdapter.getItem(position);
-//                launchDetailActivity(currentMovie);
-//            }
-//        });
-
 
         /* In case that there is no internet connection:
           I don't want to show that "No movies found" -
@@ -139,17 +112,17 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
             loaderManager.initLoader(MOVIES_LOADER_ID, null, this);
 
-            /* if internet connection got lost and than back, we'll see mEmptyStateTextView
+            /* if internet connection got lost and than back, we'll see mEmptyView
               with text "no internet connection"
               we need to reload the app and while it's reloading it's better to see a spinner**/
-//            mEmptyView.setOnClickListener(new View.OnClickListener() {TODO!!!!!!!!!!!!!!!!!!!!!!!!!!
-//                @Override
-//                public void onClick(View v) {
-//                    reload();
-//                    View loading = findViewById(R.id.loading_spinner);
-//                    loading.setVisibility(View.VISIBLE);
-//                }
-//            });
+            mEmptyView.setOnClickListener(new View.OnClickListener() {//TODO!!!!!!!!!!!!!!!!!!!!!!!!!!
+                @Override
+                public void onClick(View v) {
+                    reload();
+                    View loading = findViewById(R.id.loading_spinner);
+                    loading.setVisibility(View.VISIBLE);
+                }
+            });
         } else {/* Otherwise, display error
          // First, hide loading indicator so error message will be visible**/
             View loading = findViewById(R.id.loading_spinner);
@@ -162,7 +135,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         //  Initialization of member variable for the data base
         mDb = AppDatabase.getInstance(getApplicationContext());
     }
-
 
     @Override
     public Loader<List<Movie>> onCreateLoader(int i, Bundle bundle) {
@@ -187,21 +159,23 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
         if (networkInfo != null && networkInfo.isConnected()) {
             // Set empty state text to display "No movies found."
-            mEmptyStateTextView.setText(R.string.no_movies);
+            mEmptyView.setText(R.string.no_movies);
         } else// Update empty state with no connection error message
         {
-            mEmptyStateTextView.setText(R.string.no_internet);
+            mEmptyView.setText(R.string.no_internet);
         }
 
         // Clear the adapter of previous movies data// TODO pay attention to modification I've made- it might be wrong
 //        mAdapter.clear();
-        mAdapter.notifyDataSetChanged();
+//        mAdapter.notifyDataSetChanged();
 
         // If there is a valid list of movies, then add them to the adapter's
         // data set. This will trigger the ListView to update.
         if (movies != null && !movies.isEmpty()) {
             movies.addAll(movies);
         }
+        mAdapter = new MovieAdapter(this, movies);
+        mRv.setAdapter(mAdapter);
     }
 
     @Override
@@ -218,12 +192,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         getLoaderManager().restartLoader(MOVIES_LOADER_ID, null, this);
 
     }
-
-//    private void launchDetailActivity(Movie currentMovie) { //TODO erase
-//        Intent intent = new Intent(this, DetailActivity.class);
-//        intent.putExtra(DetailActivity.CURRENT_MOVIE, currentMovie);
-//        startActivity(intent);
-//    }
 
     @Override
     /* This method initialize the contents of the Activity's options menu.
