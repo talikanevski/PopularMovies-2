@@ -22,24 +22,11 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
     public List<Movie> movieList;
     Movie currentMovie;
     String posterUrl;
-    /**
-     * An on-click handler that  defined to make it easy for an Activity to interface with
-     * RecyclerView
-     */
-    private static MovieAdapter.ListItemClickListener mOnClickListener;
 
-
-    /**
-     * Add a ListItemClickListener as a parameter to the constructor and store it in mOnClickListener
-     **/
-    public void setClickListener(MovieAdapter.ListItemClickListener movieAdapterOnClickHandler) {
-        mOnClickListener = movieAdapterOnClickHandler;
-    }
     // data is passed into the constructor
     public MovieAdapter(Context context, List<Movie> movies) {
         this.movieList = movies;
         this.mContext = context;
-
     }
 
     @Override
@@ -49,9 +36,8 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
         return new MovieAdapterViewHolder(view);
     }
 
-    public static class MovieAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
-
-        public static ImageView posterImage;
+    public class MovieAdapterViewHolder extends RecyclerView.ViewHolder {
+        public ImageView posterImage;
         public final View mView;
 
         public MovieAdapterViewHolder(View view) {
@@ -61,34 +47,28 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
             posterImage = view.findViewById(R.id.poster_item);
         }
 
-        @Override
-        public void onClick(View view) {
-            mOnClickListener.onClick(getAdapterPosition());
+        void bind(final Movie currentMovie) {
+            posterUrl = "https://image.tmdb.org/t/p/w185" + currentMovie.getPoster();
+            assert currentMovie != null;
+            Picasso.with(posterImage.getContext())
+                    .load(posterUrl)
+                    .into(posterImage);
+            posterImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Context context = v.getContext();
+                    Intent intent = new Intent(context, DetailActivity.class);
+                    intent.putExtra(DetailActivity.CURRENT_MOVIE, currentMovie);
+                    context.startActivity(intent);
+                }
+            });
         }
     }
 
     @Override
     public void onBindViewHolder(MovieAdapterViewHolder movieAdapterViewHolder, int position) {
-        /*Get the Movie object located at this position in the list**/
-        //int intCurrentMovie = movieAdapterViewHolder.getAdapterPosition(); // TODO Kxm....Hm...
-
         currentMovie = movieList.get(position);
-
-        posterUrl = "https://image.tmdb.org/t/p/w185" + currentMovie.getPoster();
-        assert currentMovie != null;
-        Picasso.with(MovieAdapterViewHolder.posterImage.getContext())
-                .load(posterUrl)
-                .into(MovieAdapterViewHolder.posterImage);
-        MovieAdapterViewHolder.posterImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Context context = v.getContext();
-                Intent intent = new Intent(context, DetailActivity.class);
-                intent.putExtra(DetailActivity.CURRENT_MOVIE, currentMovie);
-
-                context.startActivity(intent);
-            }
-        });
+        movieAdapterViewHolder.bind(currentMovie);
     }
 
     @Override

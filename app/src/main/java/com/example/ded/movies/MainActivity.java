@@ -79,7 +79,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         mAdapter = new MovieAdapter(this, new ArrayList<Movie>());
 
         mRv.setAdapter(mAdapter);
-        mAdapter.setClickListener(this);
 
         /* In case that there is no internet connection:
           I don't want to show that "No movies found" -
