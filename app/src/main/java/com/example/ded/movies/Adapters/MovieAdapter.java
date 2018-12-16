@@ -51,14 +51,14 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
 
     public static class MovieAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
-        public static ImageView posterImage = null;
+        public static ImageView posterImage;
         public final View mView;
 
         public MovieAdapterViewHolder(View view) {
             super(view);
             mView = view;
             /* Find the View in the poster_item.xml layout with the poster of the current movie**/
-            posterImage = view.findViewById(R.id.poster);
+            posterImage = view.findViewById(R.id.poster_item);
         }
 
         @Override
@@ -70,24 +70,25 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
     @Override
     public void onBindViewHolder(MovieAdapterViewHolder movieAdapterViewHolder, int position) {
         /*Get the Movie object located at this position in the list**/
-//        final int intCurrentMovie = movieAdapterViewHolder.getAdapterPosition(); // TODO Kxm....Hm...
+        //int intCurrentMovie = movieAdapterViewHolder.getAdapterPosition(); // TODO Kxm....Hm...
+
         currentMovie = movieList.get(position);
 
         posterUrl = "https://image.tmdb.org/t/p/w185" + currentMovie.getPoster();
         assert currentMovie != null;
-        Picasso.with(mContext)
+        Picasso.with(MovieAdapterViewHolder.posterImage.getContext())
                 .load(posterUrl)
                 .into(MovieAdapterViewHolder.posterImage);
-//        MovieAdapterViewHolder.posterImage.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Context context = v.getContext();
-//                Intent intent = new Intent(context, DetailActivity.class);
-//                intent.putExtra(DetailActivity.CURRENT_MOVIE, currentMovie);
-//
-//                context.startActivity(intent);
-//            }
-//        });
+        MovieAdapterViewHolder.posterImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Context context = v.getContext();
+                Intent intent = new Intent(context, DetailActivity.class);
+                intent.putExtra(DetailActivity.CURRENT_MOVIE, currentMovie);
+
+                context.startActivity(intent);
+            }
+        });
     }
 
     @Override

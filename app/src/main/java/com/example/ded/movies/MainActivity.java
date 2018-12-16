@@ -218,6 +218,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 new MovieLoader(this, THE_MOVIE_DB_URL);
                 reload();
                 return true;
+                // https://api.themoviedb.org/3/movie/
             case R.id.navigation_top_rated:
                 THE_MOVIE_DB_URL = THE_MOVIE_DB_BASE_URL + TOP_RATED + API_Key_Label + API_Key;
                 new MovieLoader(this, THE_MOVIE_DB_URL);
