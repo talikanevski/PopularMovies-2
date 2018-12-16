@@ -2,6 +2,7 @@ package com.example.ded.movies;
 
 import android.app.LoaderManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.Loader;
 import android.databinding.DataBindingUtil;
 import android.net.ConnectivityManager;
@@ -165,17 +166,13 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             mEmptyView.setText(R.string.no_internet);
         }
 
-        // Clear the adapter of previous movies data// TODO pay attention to modification I've made- it might be wrong
-//        mAdapter.clear();
-//        mAdapter.notifyDataSetChanged();
-
         // If there is a valid list of movies, then add them to the adapter's
-        // data set. This will trigger the ListView to update.
+        // data set. This will trigger the RecyclerView to update.
         if (movies != null && !movies.isEmpty()) {
-            movies.addAll(movies);
+            mAdapter = new MovieAdapter(this, movies);
+            mRv.setAdapter(mAdapter);
+            mEmptyView.setVisibility(View.GONE);
         }
-        mAdapter = new MovieAdapter(this, movies);
-        mRv.setAdapter(mAdapter);
     }
 
     @Override
@@ -186,11 +183,13 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 //        mAdapter.clear();// TODO pay attention to modification I've made- it might be wrong
         mAdapter.notifyDataSetChanged();
 
+//        mAdapter =new MovieAdapter(this, new ArrayList<Movie>());
+//        mRv.setAdapter(mAdapter);
+
     }
 
     private void reload() {
         getLoaderManager().restartLoader(MOVIES_LOADER_ID, null, this);
-
     }
 
     @Override
@@ -246,7 +245,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 //        mAdapter.setFavoriteMovies(mDb.FavoriteMovieDao().loadFavoriteMovies());
     }
 
-    @Override
+    //    @Override
     public void onClick(int clickedItem) {
 //        Movie currentMovie = mAdapter.getItem(position);
 //        moviesGridView.setAdapter(mAdapter);

@@ -19,7 +19,7 @@ import java.util.List;
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapterViewHolder> {
 
     Context mContext;
-    private List<Movie> movieList;
+    public List<Movie> movieList;
     Movie currentMovie;
     String posterUrl;
     /**
@@ -78,16 +78,16 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
         Picasso.with(mContext)
                 .load(posterUrl)
                 .into(MovieAdapterViewHolder.posterImage);
-        MovieAdapterViewHolder.posterImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Context context = v.getContext();
-                Intent intent = new Intent(context, DetailActivity.class);
-                intent.putExtra(DetailActivity.CURRENT_MOVIE, currentMovie);
-
-                context.startActivity(intent);
-            }
-        });
+//        MovieAdapterViewHolder.posterImage.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Context context = v.getContext();
+//                Intent intent = new Intent(context, DetailActivity.class);
+//                intent.putExtra(DetailActivity.CURRENT_MOVIE, currentMovie);
+//
+//                context.startActivity(intent);
+//            }
+//        });
     }
 
     @Override
