@@ -1,12 +1,14 @@
 package com.example.ded.movies;
 
 import android.app.LoaderManager;
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
-import android.content.Intent;
 import android.content.Loader;
 import android.databinding.DataBindingUtil;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -15,12 +17,15 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.example.ded.movies.Adapters.FavoritesAdapter;
 import com.example.ded.movies.Adapters.MovieAdapter;
 import com.example.ded.movies.Models.Movie;
 import com.example.ded.movies.ROOM.AppDatabase;
+import com.example.ded.movies.ROOM.FavoriteMovieEntity;
 import com.example.ded.movies.databinding.ActivityMainBinding;
 
 import java.util.ArrayList;
@@ -35,7 +40,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private static final String POPULAR = "popular?";
     private static final String TOP_RATED = "top_rated?";
     private String THE_MOVIE_DB_URL = THE_MOVIE_DB_BASE_URL + POPULAR + API_Key_Label + API_Key; // by default
-// https://api.themoviedb.org/3/movie/335983?api_key=27489f2914bd9f638025496deaad801e&append_to_response=reviews%2Cvideos
     /**
      * Constant value for the movies loader ID. We can choose any integer.
      */
@@ -45,13 +49,13 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
      * Adapter for the list of movies
      */
     private MovieAdapter mAdapter;
+    private FavoritesAdapter favoritesAdapter;
 
     /**
      * TextView that is displayed when the list is empty
      **/
-
-    ActivityMainBinding mBinding;
     //Create a data binding instance. This class was generated based on the name of the xml layout
+    ActivityMainBinding mBinding;
     private RecyclerView mRv;
     private TextView mEmptyView;
     private ProgressBar mLoadingSpinner;
@@ -77,6 +81,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         GridLayoutManager layoutManager = new GridLayoutManager(this, 3);
         mRv.setLayoutManager(layoutManager);
         mAdapter = new MovieAdapter(this, new ArrayList<Movie>());
+        favoritesAdapter = new FavoritesAdapter(this, new ArrayList<FavoriteMovieEntity>());
 
         mRv.setAdapter(mAdapter);
 
@@ -134,6 +139,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
         //  Initialization of member variable for the data base
         mDb = AppDatabase.getInstance(getApplicationContext());
+        setUpViewModel();
+
     }
 
     @Override
@@ -178,13 +185,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     public void onLoaderReset(Loader<List<Movie>> loader) {
         Log.i(LOG_TAG, "Test:  onLoaderReset called");
 
-        /* Loader reset, so we can clear out our existing data.**/
-//        mAdapter.clear();// TODO pay attention to modification I've made- it might be wrong
         mAdapter.notifyDataSetChanged();
-
-//        mAdapter =new MovieAdapter(this, new ArrayList<Movie>());
-//        mRv.setAdapter(mAdapter);
-
     }
 
     private void reload() {
@@ -211,51 +212,51 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
      **/
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+
         switch (item.getItemId()) {
             case R.id.navigation_popular:
                 THE_MOVIE_DB_URL = THE_MOVIE_DB_BASE_URL + POPULAR + API_Key_Label + API_Key;
                 new MovieLoader(this, THE_MOVIE_DB_URL);
+                setTitle(R.string.most_popular_movies);
                 reload();
                 return true;
-                // https://api.themoviedb.org/3/movie/
             case R.id.navigation_top_rated:
                 THE_MOVIE_DB_URL = THE_MOVIE_DB_BASE_URL + TOP_RATED + API_Key_Label + API_Key;
                 new MovieLoader(this, THE_MOVIE_DB_URL);
+                setTitle(R.string.high_rated_movies);
                 reload();
                 return true;
-            case R.id.navigation_favorites:
-                // TODO (1) add what need to be added
-                reload();
+            case R.id.navigation_favorites:// TODO (1) doesn't work yet
+                setTitle(R.string.your_favorite_movies);
+                populateUiWithFavorites();
+//                reload();// TODO I don't need it here coz I don't use Loader here....I'm trying to use ROOM...
                 return true;
         }
         return false;
     }
 
-    /**
-     * This method is called after this activity has been paused or restarted.
-     * Often, this is after new data has been inserted through an FAB that add the movie to favorites,
-     * so this re-queries the database data for any changes.
-     */
-    @Override
-    protected void onResume() {
-        super.onResume();
-        //  Call the adapter's setFavoriteMovies method using the result
-        // of the loadFavoriteMovies method from the FavoriteMovieDao
-        //TODO
-//        mAdapter.setFavoriteMovies(mDb.FavoriteMovieDao().loadFavoriteMovies());
+    public void onClick(int itemId) {
     }
 
-    //    @Override
-    public void onClick(int clickedItem) {
-//        Movie currentMovie = mAdapter.getItem(position);
-//        moviesGridView.setAdapter(mAdapter);
-//        launchDetailActivity(currentMovie);
+    public void populateUiWithFavorites() {
+        favoritesAdapter.setClickListener((FavoritesAdapter.ListItemClickListener) this);
+        mRv.setAdapter(favoritesAdapter);
+        setUpViewModel();
+//        favoritesAdapter.setFavoriteMovies(favoriteMovies);  // TODO I am not sure here,,,...
+// TODO: to add observer and ViewModel here - it will make use of setFavoriteMovies method of favoritesAdapter . Now it is no in use at all!!!
     }
-//
-//    private void launchDetailActivity(Movie currentMovie) {
-//        Intent intent = new Intent(this, DetailActivity.class);
-//        intent.putExtra(DetailActivity.CURRENT_MOVIE, currentMovie);
-//        startActivity(intent);
-//    }
+
+    public void setUpViewModel() {
+        MainViewModel viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
+        viewModel.getFavoriteMovies().observe(this, new Observer<List<FavoriteMovieEntity>>() {
+            @Override
+            public void onChanged(@Nullable List<FavoriteMovieEntity> favoriteMovieEntities) {
+                Log.d(LOG_TAG, "Updating list of favorite movies from LiveData in ViewModel");
+                favoritesAdapter.setFavoriteMovies(favoriteMovieEntities);
+            }
+        });
+    }
+
+    public void OnItemClickListener(int itemId) {
+    }
 }
-

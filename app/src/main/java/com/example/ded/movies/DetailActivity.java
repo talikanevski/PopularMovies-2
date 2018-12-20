@@ -1,10 +1,13 @@
 package com.example.ded.movies;
 
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.Observer;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.ded.movies.Adapters.FavoritesAdapter;
 import com.example.ded.movies.Adapters.ReviewAdapter;
 import com.example.ded.movies.Adapters.TrailerAdapter;
 import com.example.ded.movies.Models.Movie;
@@ -30,6 +34,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.squareup.picasso.Picasso.with;
+
+import com.example.ded.movies.Adapters.FavoritesAdapter.FavoritesAdapterViewHolder;
 
 public class DetailActivity extends AppCompatActivity implements TrailerAdapter.ListItemClickListener {
 
@@ -50,6 +56,8 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
     FloatingActionButton fabFavorite;
     FloatingActionButton fabShare;
     boolean isFavorite;
+    private FavoritesAdapter favoritesAdapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +81,7 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
 
         //  Initializing member variable for the data base
         mDb = AppDatabase.getInstance(getApplicationContext());
+        favoritesAdapter = new FavoritesAdapter(this, new ArrayList<FavoriteMovieEntity>());
 
         Intent intent = getIntent();
         if (intent == null) {
@@ -139,7 +148,7 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
         }
     }
 
-    private void favoriteButtonClicked() {
+    public void favoriteButtonClicked() {
         //TODO insert logic whether the movie already marked as favorite ot not - use boolean or check what is a drawable resource or if it is in the database already
         if (!isFavorite) {
             String title = currentMovie.getTitle();
@@ -148,16 +157,34 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
             String userRating = currentMovie.getUserRating();
             String poster = currentMovie.getPoster();
             // Creation FavoriteMovieEntity variable using the variables defined above
-            FavoriteMovieEntity favoriteMovieEntity;
+            final FavoriteMovieEntity favoriteMovieEntity;
             favoriteMovieEntity = new FavoriteMovieEntity(title, overview, releaseDate, userRating, poster, backdrop, currentMovie.getId());
+            AppExecutors.getInstance().diskIO().execute(new Runnable() {
+                @Override
+                public void run() {
+                    mDb.favoriteMovieDao().insertMovie(favoriteMovieEntity);
+                    fabFavorite.setImageResource(R.drawable.favorites_red);
+                    isFavorite = true;
+                }
+            });
             //  Use the taskDao in the AppDatabase variable to insert the FavoriteMovieEntity
-            mDb.favoriteMovieDao().insertMovie(favoriteMovieEntity);
-            fabFavorite.setImageResource(R.drawable.favorites_red);
-            isFavorite = true;
+
         } else {//TODO
-            fabFavorite.setImageResource(R.drawable.favorites);
-            isFavorite = false;
+            AppExecutors.getInstance().diskIO().execute(new Runnable() {
+                @Override
+                public void run() {
+                    fabFavorite.setImageResource(R.drawable.favorites);
+                    isFavorite = false;
+                    deleteFromFavorites(FavoritesAdapter.FavoritesAdapterViewHolder);
+                }
+            });
         }
+    }
+
+    public void deleteFromFavorites(final FavoritesAdapterViewHolder holder) {
+        int position = holder.getAdapterPosition();
+        List<FavoriteMovieEntity> favoriteMovies = favoritesAdapter.getFavoriteMovies();
+        mDb.favoriteMovieDao().deleteMovie(favoriteMovies.get(position));
     }
 
     private void closeOnError() {

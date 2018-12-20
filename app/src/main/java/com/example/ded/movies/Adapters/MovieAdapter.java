@@ -77,7 +77,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
     }
 
     /**
-     * The interface that receives onClick messages.
+     * The interface that receives onItemClickListener messages.
      */
     public interface ListItemClickListener {
         void onClick(int clickedItem);

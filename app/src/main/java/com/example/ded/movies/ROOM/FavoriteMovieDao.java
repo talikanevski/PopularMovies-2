@@ -1,5 +1,6 @@
 package com.example.ded.movies.ROOM;
 
+import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
@@ -18,14 +19,17 @@ public interface FavoriteMovieDao {
     // When the paired method is called, the query gets executed.
     // TODO  think if it's better to order by userRating or something else.
     @Query("SELECT * FROM favorite_movies ORDER BY id")
-    List<FavoriteMovieEntity> loadFavoriteMovies();
+    LiveData<List<FavoriteMovieEntity>> loadFavoriteMovies();
 
     @Insert
     void insertMovie(FavoriteMovieEntity favoriteMovie);
 
-    @Update(onConflict = OnConflictStrategy.REPLACE)// TODO think if I need it or how can I use it
+    @Update(onConflict = OnConflictStrategy.REPLACE)// TODO: to think if I need it or how can I use it
     void updateMovie(FavoriteMovieEntity favoriteMovie);
 
     @Delete
     void deleteMovie(FavoriteMovieEntity favoriteMovie);
+
+    @Query("SELECT * FROM favorite_movies WHERE id = :id")
+    FavoriteMovieEntity loadFavoritesById (int id);
 }
