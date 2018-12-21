@@ -162,12 +162,12 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
             AppExecutors.getInstance().diskIO().execute(new Runnable() {
                 @Override
                 public void run() {
+                    //  Use the favoriteMovieDao in the AppDatabase variable to insert the FavoriteMovieEntity
                     mDb.favoriteMovieDao().insertMovie(favoriteMovieEntity);
                     fabFavorite.setImageResource(R.drawable.favorites_red);
                     isFavorite = true;
                 }
             });
-            //  Use the taskDao in the AppDatabase variable to insert the FavoriteMovieEntity
 
         } else {//TODO
             AppExecutors.getInstance().diskIO().execute(new Runnable() {

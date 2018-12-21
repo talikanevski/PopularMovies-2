@@ -239,7 +239,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     }
 
     public void populateUiWithFavorites() {
-        favoritesAdapter.setClickListener((FavoritesAdapter.ListItemClickListener) this);
+//        favoritesAdapter.setClickListener((FavoritesAdapter.ListItemClickListener) this);
         mRv.setAdapter(favoritesAdapter);
         setUpViewModel();
 //        favoritesAdapter.setFavoriteMovies(favoriteMovies);  // TODO I am not sure here,,,...

@@ -2,6 +2,7 @@ package com.example.ded.movies.Adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Parcelable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -60,7 +61,7 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.Favo
                 public void onClick(View v) {
                     Context context = v.getContext();
                     Intent intent = new Intent(context, DetailActivity.class);
-                    intent.putExtra(DetailActivity.CURRENT_MOVIE, (Serializable) currentMovie);
+                    intent.putExtra(DetailActivity.CURRENT_MOVIE, (Parcelable) currentMovie);
                     context.startActivity(intent);
                 }
             });
