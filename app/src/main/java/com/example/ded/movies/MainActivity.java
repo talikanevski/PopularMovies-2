@@ -242,8 +242,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 //        favoritesAdapter.setClickListener((FavoritesAdapter.ListItemClickListener) this);
         mRv.setAdapter(favoritesAdapter);
         setUpViewModel();
-//        favoritesAdapter.setFavoriteMovies(favoriteMovies);  // TODO I am not sure here,,,...
-// TODO: to add observer and ViewModel here - it will make use of setFavoriteMovies method of favoritesAdapter . Now it is no in use at all!!!
     }
 
     public void setUpViewModel() {

@@ -87,15 +87,11 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
      * When data changes, this method updates the list of FavoriteMovieEntity
      * and notifies the adapter to use the new values on it
      */
-    public void setFavoriteMovies(List<FavoriteMovieEntity> favoriteMovies) {
-//        mFavoriteMovie = favoriteMovies;
-        notifyDataSetChanged();
-    }
+//    public void setFavoriteMovies(List<FavoriteMovieEntity> favoriteMovies) {
+////        mFavoriteMovie = favoriteMovies;
+//        notifyDataSetChanged();
+//    }
 
-    // convenience method for getting data at click position
-    Movie getItem(int id) {
-        return movieList.get(id);
-    }
 
 }
 

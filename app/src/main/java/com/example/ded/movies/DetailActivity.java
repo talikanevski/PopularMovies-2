@@ -1,7 +1,7 @@
 package com.example.ded.movies;
 
-import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.net.Uri;
@@ -11,12 +11,14 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.ded.movies.Adapters.FavoritesAdapter;
+import com.example.ded.movies.Adapters.MovieAdapter;
 import com.example.ded.movies.Adapters.ReviewAdapter;
 import com.example.ded.movies.Adapters.TrailerAdapter;
 import com.example.ded.movies.Models.Movie;
@@ -38,10 +40,11 @@ import static com.squareup.picasso.Picasso.with;
 import com.example.ded.movies.Adapters.FavoritesAdapter.FavoritesAdapterViewHolder;
 
 public class DetailActivity extends AppCompatActivity implements TrailerAdapter.ListItemClickListener {
-
+    private static final String LOG_TAG = DetailActivity.class.getName();
     public static final String CURRENT_MOVIE = "current_movie";
     private static final String YOUTUBE_URL = "https://www.youtube.com/watch?v=";
     ActivityDetailBinding mBinding; //Create a data binding instance. This class was generated based on the name of the xml layout
+    private MovieAdapter movieAdapter;
     private TrailerAdapter adapter;
     private ReviewAdapter reviewAdapter;
     public Movie currentMovie;
@@ -55,9 +58,8 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
     ImageView backdrop;
     FloatingActionButton fabFavorite;
     FloatingActionButton fabShare;
-    boolean isFavorite;
+    Boolean isFavorite;
     private FavoritesAdapter favoritesAdapter;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +68,7 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
         // DataBindUtil.setContentView replaces our normal call of setContent view:
         // " setContentView(R.layout.activity_detail); "
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_detail);
+        movieAdapter = new MovieAdapter(this, new ArrayList<Movie>());
 
         // set up recyclerview and adapter to display the trailers
         LinearLayoutManager trailersLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
@@ -121,7 +124,7 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
                     .load("https://image.tmdb.org/t/p/w185" + currentMovie.getPoster())
                     .into(backdrop);
 
-            loadTrailersPlusReviews(currentMovie.getId());
+            loadTrailersPlusReviews(currentMovie.getBackdropIdId());
 
             // Setup FAB to add the movie to favorites
             fabFavorite = (FloatingActionButton) findViewById(R.id.favorive_fab);
@@ -149,7 +152,9 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
     }
 
     public void favoriteButtonClicked() {
-        //TODO insert logic whether the movie already marked as favorite ot not - use boolean or check what is a drawable resource or if it is in the database already
+        //TODO find another logic
+//        int position = FavoritesAdapter.FavoritesAdapterViewHolder.getAdapterPosition();
+//        List<FavoriteMovieEntity> favoriteMovies = favoritesAdapter.getFavoriteMovies();
         if (!isFavorite) {
             String title = currentMovie.getTitle();
             String overview = currentMovie.getOverview();
@@ -158,17 +163,17 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
             String poster = currentMovie.getPoster();
             // Creation FavoriteMovieEntity variable using the variables defined above
             final FavoriteMovieEntity favoriteMovieEntity;
-            favoriteMovieEntity = new FavoriteMovieEntity(title, overview, releaseDate, userRating, poster, backdrop, currentMovie.getId());
+            favoriteMovieEntity = new FavoriteMovieEntity(title, overview, releaseDate, userRating, poster, backdrop, currentMovie.getBackdropIdId(), isFavorite);
             AppExecutors.getInstance().diskIO().execute(new Runnable() {
                 @Override
                 public void run() {
                     //  Use the favoriteMovieDao in the AppDatabase variable to insert the FavoriteMovieEntity
                     mDb.favoriteMovieDao().insertMovie(favoriteMovieEntity);
-                    fabFavorite.setImageResource(R.drawable.favorites_red);
-                    isFavorite = true;
+                    setUpViewModel();
                 }
             });
-
+            fabFavorite.setImageResource(R.drawable.favorites_red);
+            isFavorite = true;
         } else {//TODO
             AppExecutors.getInstance().diskIO().execute(new Runnable() {
                 @Override
@@ -176,6 +181,8 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
                     fabFavorite.setImageResource(R.drawable.favorites);
                     isFavorite = false;
                     deleteFromFavorites(FavoritesAdapter.FavoritesAdapterViewHolder);
+                    setUpViewModel();
+
                 }
             });
         }
@@ -250,6 +257,17 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
 
     private void loadTrailersPlusReviews(String movieId) {
         new Task().execute(movieId, null, null);
+    }
+
+    public void setUpViewModel() {
+        MainViewModel viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
+        viewModel.getFavoriteMovies().observe(this, new Observer<List<FavoriteMovieEntity>>() {
+            @Override
+            public void onChanged(@Nullable List<FavoriteMovieEntity> favoriteMovieEntities) {
+                Log.d(LOG_TAG, "Updating list of favorite movies from LiveData in ViewModel, DetailActivity");
+                favoritesAdapter.setFavoriteMovies(favoriteMovieEntities);
+            }
+        });
     }
 }
 

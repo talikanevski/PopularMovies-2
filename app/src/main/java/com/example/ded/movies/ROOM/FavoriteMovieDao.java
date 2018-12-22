@@ -21,7 +21,7 @@ public interface FavoriteMovieDao {
     @Query("SELECT * FROM favorite_movies ORDER BY id")
     LiveData<List<FavoriteMovieEntity>> loadFavoriteMovies();
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertMovie(FavoriteMovieEntity favoriteMovie);
 
     @Update(onConflict = OnConflictStrategy.REPLACE)// TODO: to think if I need it or how can I use it

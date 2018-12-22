@@ -104,7 +104,7 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.Favo
     }
 
     // convenience method for getting data at click position
-    FavoriteMovieEntity getItem(int id) {
+    FavoriteMovieEntity getMovieId(int id) {
         return favoriteMovieEntityList.get(id);
     }
 
