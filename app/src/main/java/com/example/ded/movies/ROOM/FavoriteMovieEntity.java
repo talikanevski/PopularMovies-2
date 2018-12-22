@@ -136,7 +136,7 @@ public class FavoriteMovieEntity {
     }
 
     public void setFavorite(Boolean favorite) {
-        isFavorite = favorite;
+        this.isFavorite = favorite;
     }
 
     public Boolean getIsFavorite() {

@@ -33,9 +33,8 @@ public class Movie implements Parcelable {
     /**
      * backdrop
      **/
-    public final Boolean mIsFavorite;
 
-    public Movie(String title, String overview, String releaseDate, String userRating, String poster, String backdrop, String backdropId, Boolean isFavorite) {
+    public Movie(String title, String overview, String releaseDate, String userRating, String poster, String backdrop, String backdropId) {
         mTitle = title;
         mOverview = overview;
         mReleaseDate = releaseDate;
@@ -43,7 +42,6 @@ public class Movie implements Parcelable {
         mPoster = poster;
         mBackdrop = backdrop;
         mBackdropId = backdropId;
-        mIsFavorite = isFavorite;
     }
 
     private Movie(Parcel in) {
@@ -54,7 +52,6 @@ public class Movie implements Parcelable {
         mPoster = in.readString();
         mBackdrop = in.readString();
         mBackdropId = in.readString();
-        mIsFavorite = Boolean.valueOf(in.readString());
     }
 
     public static final Creator<Movie> CREATOR = new Creator<Movie>() {
@@ -93,10 +90,6 @@ public class Movie implements Parcelable {
         return mBackdropId;
     }
 
-    public Boolean getmIsFavorite() {
-        return mIsFavorite;
-    }
-
     @Override
     public int describeContents() {
         return 0;
@@ -111,6 +104,5 @@ public class Movie implements Parcelable {
         parcel.writeString(mPoster);
         parcel.writeString(mBackdrop);
         parcel.writeString(mBackdropId);
-        parcel.writeString(String.valueOf(mIsFavorite));
     }
 }

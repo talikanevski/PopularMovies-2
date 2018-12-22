@@ -45,8 +45,6 @@ final class Utils {
         String thumbnail;
         String backdrop;
         String id;
-        Boolean isFavorite;
-        isFavorite = false;
 
         /*If the JSON string is empty or null, then return early.**/
         if (TextUtils.isEmpty(jsonResponse)) {
@@ -70,7 +68,7 @@ final class Utils {
                 thumbnail = result.getString("poster_path");
                 backdrop = result.getString("backdrop_path");
                 id = result.getString("id");
-                Movie movie = new Movie(title, overview, releaseDate, userRating, thumbnail, backdrop, id, isFavorite);
+                Movie movie = new Movie(title, overview, releaseDate, userRating, thumbnail, backdrop, id);
                 movies.add(movie);
             }
 

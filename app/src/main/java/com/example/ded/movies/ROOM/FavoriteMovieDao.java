@@ -32,4 +32,5 @@ public interface FavoriteMovieDao {
 
     @Query("SELECT * FROM favorite_movies WHERE id = :id")
     FavoriteMovieEntity loadFavoritesById (int id);
+
 }

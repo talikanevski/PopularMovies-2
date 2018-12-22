@@ -70,13 +70,13 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_detail);
         movieAdapter = new MovieAdapter(this, new ArrayList<Movie>());
 
-        // set up recyclerview and adapter to display the trailers
+        // set up RecyclerView and adapter to display the trailers
         LinearLayoutManager trailersLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         mBinding.rvTrailers.setLayoutManager(trailersLayoutManager);
         adapter = new TrailerAdapter(this);
         mBinding.rvTrailers.setAdapter(adapter);
 
-        // set up recyclerview and adapter to display the reviews
+        // set up RecyclerView and adapter to display the reviews
         LinearLayoutManager reviewsLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         mBinding.rvReviews.setLayoutManager(reviewsLayoutManager);
         reviewAdapter = new ReviewAdapter(this);
@@ -128,12 +128,15 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
 
             // Setup FAB to add the movie to favorites
             fabFavorite = (FloatingActionButton) findViewById(R.id.favorive_fab);
+            isFavorite = checkIfFavorite();
+            setButton(isFavorite);
             fabFavorite.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     favoriteButtonClicked();
                 }
             });
+
             // Setup FAB to share the movie's trailer
             //Implement sharing functionality to allow the user to share the first trailer’s YouTube URL from the movie details screen.
             fabShare = (FloatingActionButton) findViewById(R.id.share_fab);
@@ -151,6 +154,25 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
         }
     }
 
+    public void setButton(Boolean isFavorite) {
+        if (isFavorite) {
+            fabFavorite.setImageResource(R.drawable.favorites_red);
+        } else {
+            fabFavorite.setImageResource(R.drawable.favorites);
+        }
+    }
+
+    public boolean checkIfFavorite() {
+        List<FavoriteMovieEntity> favoriteMovies = favoritesAdapter.getFavoriteMovies();
+        for (int i = 0; i < favoriteMovies.size(); i++) {
+            // && (currentMovie.getReleaseDate() == favoriteMovies.get(i).getReleaseDate())
+            if ((currentMovie.getTitle() == favoriteMovies.get(i).getTitle())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public void favoriteButtonClicked() {
         //TODO find another logic
 //        int position = FavoritesAdapter.FavoritesAdapterViewHolder.getAdapterPosition();
@@ -161,6 +183,8 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
             String releaseDate = currentMovie.getReleaseDate();
             String userRating = currentMovie.getUserRating();
             String poster = currentMovie.getPoster();
+            fabFavorite.setImageResource(R.drawable.favorites_red);
+            isFavorite = true;
             // Creation FavoriteMovieEntity variable using the variables defined above
             final FavoriteMovieEntity favoriteMovieEntity;
             favoriteMovieEntity = new FavoriteMovieEntity(title, overview, releaseDate, userRating, poster, backdrop, currentMovie.getBackdropIdId(), isFavorite);
@@ -172,14 +196,13 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
                     setUpViewModel();
                 }
             });
-            fabFavorite.setImageResource(R.drawable.favorites_red);
-            isFavorite = true;
+
         } else {//TODO
             AppExecutors.getInstance().diskIO().execute(new Runnable() {
                 @Override
                 public void run() {
-                    fabFavorite.setImageResource(R.drawable.favorites);
                     isFavorite = false;
+                    fabFavorite.setImageResource(R.drawable.favorites);
                     deleteFromFavorites(FavoritesAdapter.FavoritesAdapterViewHolder);
                     setUpViewModel();
 
@@ -187,6 +210,7 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
             });
         }
     }
+
 
     public void deleteFromFavorites(final FavoritesAdapterViewHolder holder) {
         int position = holder.getAdapterPosition();
