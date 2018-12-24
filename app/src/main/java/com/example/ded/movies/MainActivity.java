@@ -4,6 +4,7 @@ import android.app.LoaderManager;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
+import android.content.Intent;
 import android.content.Loader;
 import android.databinding.DataBindingUtil;
 import android.net.ConnectivityManager;
@@ -62,6 +63,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     //  Creation AppDatabase member variable for the Database
     private AppDatabase mDb;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -229,7 +231,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             case R.id.navigation_favorites:// TODO (1) doesn't work yet
                 setTitle(R.string.your_favorite_movies);
                 populateUiWithFavorites();
-//                reload();// TODO I don't need it here coz I don't use Loader here....I'm trying to use ROOM...
                 return true;
         }
         return false;
@@ -256,5 +257,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     }
 
     public void OnItemClickListener(int itemId) {
+        Intent intent = new Intent(MainActivity.this, DetailActivity.class);
+        intent.putExtra(DetailActivity.ID, itemId);
+        startActivity(intent);
     }
 }
