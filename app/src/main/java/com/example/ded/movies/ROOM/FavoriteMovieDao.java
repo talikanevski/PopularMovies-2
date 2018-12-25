@@ -24,13 +24,23 @@ public interface FavoriteMovieDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertMovie(FavoriteMovieEntity favoriteMovie);
 
+    @Query("SELECT * FROM favorite_movies ORDER BY id")
+    List<FavoriteMovieEntity> loadFavoriteMoviesMy();
+
+
+
     @Update(onConflict = OnConflictStrategy.REPLACE)// TODO: to think if I need it or how can I use it
     void updateMovie(FavoriteMovieEntity favoriteMovie);
 
     @Delete
     void deleteMovie(FavoriteMovieEntity favoriteMovie);
 
-    @Query("SELECT * FROM favorite_movies WHERE id = :id")
-    LiveData<FavoriteMovieEntity> loadFavoritesById (int id);
+    @Query("DELETE FROM favorite_movies WHERE backdropId = :id")
+    void deleteMovieMy(String id);
 
+    @Query("SELECT * FROM favorite_movies WHERE backdropId = :id")
+    LiveData<FavoriteMovieEntity> loadFavoritesById (String id);
+
+    @Query("SELECT * FROM favorite_movies WHERE backdropId = :id")
+    FavoriteMovieEntity loadFavoritesByIdMy (String id);
 }

@@ -15,6 +15,7 @@ public class FavoriteMovieEntity {
     //  @PrimaryKey @ColumnInfo(name = "id")
     @PrimaryKey(autoGenerate = true) // default is false
     private int id;
+
     private String title;
     /**
      * title of the movie

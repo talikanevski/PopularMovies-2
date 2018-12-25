@@ -99,24 +99,28 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
         Intent intent = getIntent();
         currentMovie = intent.getParcelableExtra(CURRENT_MOVIE);
 
+
+        List<FavoriteMovieEntity> favoriteMoviesMy = mDb.favoriteMovieDao().loadFavoriteMoviesMy();
+
+
         if (intent == null) {
             closeOnError();
         }
         if (intent != null && intent.hasExtra(ID)) {
-            if (mId == DEFAULT_ID) {
-                // populate the UI
-                // Assign the value of EXTRA_ID in the intent to mId
-                // Use DEFAULT_ID as the default
-                mId = intent.getIntExtra(EXTRA_ID, DEFAULT_ID);
-                final LiveData<FavoriteMovieEntity> favoriteMovieEntity = mDb.favoriteMovieDao().loadFavoritesById(mId);
-                favoriteMovieEntity.observe(this, new Observer<FavoriteMovieEntity>() {
-                    @Override
-                    public void onChanged(@Nullable FavoriteMovieEntity favoriteMovieEntity) {
-        //                        favoriteMovieEntity.removeObserver();
-                        populateUI(favoriteMovieEntity);
-                    }
-                });
-            }
+//            if (mId == DEFAULT_ID) {
+//                // populate the UI
+//                // Assign the value of EXTRA_ID in the intent to mId
+//                // Use DEFAULT_ID as the default
+//                mId = intent.getIntExtra(EXTRA_ID, DEFAULT_ID);
+//                final LiveData<FavoriteMovieEntity> favoriteMovieEntity = mDb.favoriteMovieDao().loadFavoritesById(mId);
+//                favoriteMovieEntity.observe(this, new Observer<FavoriteMovieEntity>() {
+//                    @Override
+//                    public void onChanged(@Nullable FavoriteMovieEntity favoriteMovieEntity) {
+//        //                        favoriteMovieEntity.removeObserver();
+//                        populateUI(favoriteMovieEntity);
+//                    }
+//                });
+//            }
         } else {
             /* Find the TextView in the activity_detail.xml layout with title**/
             titleTextView = findViewById(R.id.title);
@@ -256,14 +260,16 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
     }
 
     public boolean checkIfFavorite() {
-        List<FavoriteMovieEntity> favoriteMovies = favoritesAdapter.getFavoriteMovies();
-        for (int i = 0; i < favoriteMovies.size(); i++) {
-            // && (currentMovie.getReleaseDate() == favoriteMovies.get(i).getReleaseDate())
-            if ((currentMovie.getTitle() == favoriteMovies.get(i).getTitle())) {
-                return true;
-            }
-        }
-        return false;
+//        List<FavoriteMovieEntity> favoriteMovies = favoritesAdapter.getFavoriteMovies();
+//        for (int i = 0; i < favoriteMovies.size(); i++) {
+//            // && (currentMovie.getReleaseDate() == favoriteMovies.get(i).getReleaseDate())
+//            if ((currentMovie.getTitle() == favoriteMovies.get(i).getTitle())) {
+//                return true;
+//            }
+//        }
+//        return false;
+        FavoriteMovieEntity favoriteMovie = mDb.favoriteMovieDao().loadFavoritesByIdMy(currentMovie.getBackdropIdId());
+        return (favoriteMovie != null);
     }
 
     public void favoriteButtonClicked() {
@@ -276,22 +282,25 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
             String releaseDate = currentMovie.getReleaseDate();
             String userRating = currentMovie.getUserRating();
             String poster = currentMovie.getPoster();
-            fabFavorite.setImageResource(R.drawable.favorites_red);
+//            fabFavorite.setImageResource(R.drawable.favorites_red);
             isFavorite = true;
+            setButton(isFavorite);
             // Creation FavoriteMovieEntity variable using the variables defined above
             final FavoriteMovieEntity favoriteMovieEntity;
             favoriteMovieEntity = new FavoriteMovieEntity(title, overview, releaseDate, userRating, poster, backdrop, currentMovie.getBackdropIdId(), isFavorite);
             AppExecutors.getInstance().diskIO().execute(new Runnable() {
                 @Override
                 public void run() {
-                    if (mId == DEFAULT_ID) {
-                        //  Use the favoriteMovieDao in the AppDatabase variable to insert the FavoriteMovieEntity
-                        mDb.favoriteMovieDao().insertMovie(favoriteMovieEntity);
-                        setUpViewModel();
-                    } else { //update
-                        favoriteMovieEntity.setId(mId);
-                        mDb.favoriteMovieDao().updateMovie(favoriteMovieEntity);
-                    }
+//                    if (mId == DEFAULT_ID) {
+//                        //  Use the favoriteMovieDao in the AppDatabase variable to insert the FavoriteMovieEntity
+//                        mDb.favoriteMovieDao().insertMovie(favoriteMovieEntity);
+//                        setUpViewModel();
+//                    } else { //update
+//                        favoriteMovieEntity.setId(mId);
+//                        mDb.favoriteMovieDao().updateMovie(favoriteMovieEntity);
+//                    }
+                    mDb.favoriteMovieDao().insertMovie(favoriteMovieEntity);
+                    setUpViewModel();
                 }
             });
 
@@ -300,8 +309,11 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
                 @Override
                 public void run() {
                     isFavorite = false;
-                    fabFavorite.setImageResource(R.drawable.favorites);
-                    deleteFromFavorites(FavoritesAdapter.FavoritesAdapterViewHolder);
+//                    fabFavorite.setImageResource(R.drawable.favorites);
+                    setButton(isFavorite);
+                    mDb.favoriteMovieDao().deleteMovieMy(currentMovie.getBackdropIdId());
+
+//                    deleteFromFavorites(FavoritesAdapter.FavoritesAdapterViewHolder);
                     setUpViewModel();
 
                 }
@@ -309,11 +321,11 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
         }
     }
 
-    public void deleteFromFavorites(final FavoritesAdapterViewHolder holder) {
-        int position = holder.getAdapterPosition();
-        List<FavoriteMovieEntity> favoriteMovies = favoritesAdapter.getFavoriteMovies();
-        mDb.favoriteMovieDao().deleteMovie(favoriteMovies.get(position));
-    }
+//    public void deleteFromFavorites(final FavoritesAdapterViewHolder holder) {
+//        int position = holder.getAdapterPosition();
+//        List<FavoriteMovieEntity> favoriteMovies = favoritesAdapter.getFavoriteMovies();
+//        mDb.favoriteMovieDao().deleteMovie(favoriteMovies.get(position));
+//    }
 
     private void closeOnError() {
         finish();
