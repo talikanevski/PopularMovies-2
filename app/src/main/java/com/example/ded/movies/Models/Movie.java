@@ -29,19 +29,19 @@ public class Movie implements Parcelable {
     /**
      * backdrop
      **/
-    private final String mBackdropId;
+    private String mId;
     /**
-     * backdrop
+     *The Movie DB id
      **/
 
-    public Movie(String title, String overview, String releaseDate, String userRating, String poster, String backdrop, String backdropId) {
+    public Movie(String title, String overview, String releaseDate, String userRating, String poster, String backdrop, String id) {
         mTitle = title;
         mOverview = overview;
         mReleaseDate = releaseDate;
         mUserRating = userRating;
         mPoster = poster;
         mBackdrop = backdrop;
-        mBackdropId = backdropId;
+        mId = id;
     }
 
     private Movie(Parcel in) {
@@ -51,7 +51,7 @@ public class Movie implements Parcelable {
         mUserRating = in.readString();
         mPoster = in.readString();
         mBackdrop = in.readString();
-        mBackdropId = in.readString();
+        mId = in.readString();
     }
 
     public static final Creator<Movie> CREATOR = new Creator<Movie>() {
@@ -86,9 +86,13 @@ public class Movie implements Parcelable {
         return mPoster;
     }
 
-    public String getBackdropIdId() {
-        return mBackdropId;
+    public String getId() {
+        return mId;
     }
+
+    public void setmId(String id) { this.mId = id;
+    }
+
 
     @Override
     public int describeContents() {
@@ -103,6 +107,6 @@ public class Movie implements Parcelable {
         parcel.writeString(mUserRating);
         parcel.writeString(mPoster);
         parcel.writeString(mBackdrop);
-        parcel.writeString(mBackdropId);
+        parcel.writeString(mId);
     }
 }

@@ -32,7 +32,7 @@ import com.example.ded.movies.databinding.ActivityMainBinding;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List<Movie>>, MovieAdapter.ListItemClickListener {
+public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List<Movie>>, MovieAdapter.ListItemClickListener, FavoritesAdapter.ListItemClickListener {
     private static final String LOG_TAG = MainActivity.class.getName();
 
     public static final String API_Key_Label = "api_key=";
@@ -142,7 +142,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         //  Initialization of member variable for the data base
         mDb = AppDatabase.getInstance(getApplicationContext());
         setUpViewModel();
-
     }
 
     @Override
@@ -256,9 +255,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         });
     }
 
-    public void OnItemClickListener(int itemId) {
-        Intent intent = new Intent(MainActivity.this, DetailActivity.class);
-        intent.putExtra(DetailActivity.ID, itemId);
-        startActivity(intent);
-    }
+//    public void OnItemClickListener(int itemId) {
+//        Intent intent = new Intent(MainActivity.this, DetailActivity.class);
+//        intent.putExtra(DetailActivity.ID, itemId);
+//        startActivity(intent);
+//    }
 }

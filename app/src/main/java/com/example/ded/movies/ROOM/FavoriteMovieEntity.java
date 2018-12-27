@@ -1,6 +1,5 @@
 package com.example.ded.movies.ROOM;
 
-import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
@@ -38,29 +37,27 @@ public class FavoriteMovieEntity {
     /**
      * backdrop
      **/
-    private String backdropId;
+    private String theMovieDbId;
     /**
-     * backdrop
+     *The Movie DB id
      **/
-    private Boolean isFavorite;
 
     // the limitation of Room is it can have only one constructor and I have two!
     //the first one I'll use to create a new favorite movie (it will receive it's id automatically)
     // and the second constructor I''ll use after the FavoriteMovieEntity was created, to be able to delete it if needed
     // so I just add @Ignore to the first one
     @Ignore
-    public FavoriteMovieEntity(String title, String overview, String releaseDate, String userRating, String poster, ImageView backdrop, String backdropId, Boolean isFavorite) {
+    public FavoriteMovieEntity(String title, String overview, String releaseDate, String userRating, String poster, ImageView backdrop, String theMovieDbId) {
         this.title = title;
         this.overview = overview;
         this.releaseDate = releaseDate;
         this.userRating = userRating;
         this.poster = poster;
         this.backdrop = String.valueOf(backdrop);
-        this.backdropId = backdropId;  /** backdrop**/
-        this.isFavorite = isFavorite;
+        this.theMovieDbId = theMovieDbId;
     }
 
-    public FavoriteMovieEntity(int id, String title, String overview, String releaseDate, String userRating, String poster, String backdrop, String backdropId, Boolean isFavorite) {
+    public FavoriteMovieEntity(int id, String title, String overview, String releaseDate, String userRating, String poster, String backdrop, String theMovieDbId) {
         this.id = id;
         this.title = title;
         this.overview = overview;
@@ -68,8 +65,7 @@ public class FavoriteMovieEntity {
         this.userRating = userRating;
         this.poster = poster;
         this.backdrop = backdrop;
-        this.backdropId = backdropId;  /** backdrop**/
-        this.isFavorite = isFavorite;
+        this.theMovieDbId = theMovieDbId;
     }
 
     public int getId() {
@@ -128,19 +124,11 @@ public class FavoriteMovieEntity {
         this.backdrop = backdrop;
     }
 
-    public String getBackdropId() {
-        return backdropId;
+    public String getTheMovieDbId() {
+        return theMovieDbId;
     }
 
-    public void setBackdropId(String mbackdropId) {
-        this.backdropId = mbackdropId;
-    }
-
-    public void setFavorite(Boolean favorite) {
-        this.isFavorite = favorite;
-    }
-
-    public Boolean getIsFavorite() {
-        return isFavorite;
+    public void setTheMovieDbId(String theMovieDbId) {
+        this.theMovieDbId = theMovieDbId;
     }
 }

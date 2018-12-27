@@ -10,11 +10,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.example.ded.movies.DetailActivity;
+import com.example.ded.movies.Models.Movie;
 import com.example.ded.movies.R;
 import com.example.ded.movies.ROOM.FavoriteMovieEntity;
 import com.squareup.picasso.Picasso;
 
-import java.io.Serializable;
 import java.util.List;
 
 public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.FavoritesAdapterViewHolder> {
@@ -22,9 +22,10 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.Favo
     public static FavoritesAdapter.FavoritesAdapterViewHolder FavoritesAdapterViewHolder;//TODO   I am not sure about this at all....
     Context mContext;
     public List<FavoriteMovieEntity> favoriteMovieEntityList;
-    FavoriteMovieEntity currentMovie;
+    FavoriteMovieEntity currentFavoriteMovie;
+    Movie currentMovie;
     String posterUrl;
-    private ListItemClickListener mClickListener;
+//    private ListItemClickListener mClickListener;
 
     // data is passed into the constructor
     public FavoritesAdapter(Context context, List<FavoriteMovieEntity> favoriteMovies) {
@@ -50,9 +51,9 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.Favo
             posterImage = view.findViewById(R.id.poster_item);
         }
 
-        void bind(final FavoriteMovieEntity currentMovie) {
-            posterUrl = "https://image.tmdb.org/t/p/w185" + currentMovie.getPoster();
-            assert currentMovie != null;
+        void bind(final FavoriteMovieEntity currentFavoriteMovie) {
+            posterUrl = "https://image.tmdb.org/t/p/w185" + currentFavoriteMovie.getPoster();
+            assert currentFavoriteMovie != null;
             Picasso.with(posterImage.getContext())
                     .load(posterUrl)
                     .into(posterImage);
@@ -61,6 +62,11 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.Favo
                 public void onClick(View v) {
                     Context context = v.getContext();
                     Intent intent = new Intent(context, DetailActivity.class);
+                    currentMovie = new Movie(currentFavoriteMovie.getTitle(),
+                            currentFavoriteMovie.getOverview(), currentFavoriteMovie.getReleaseDate(),
+                            currentFavoriteMovie.getUserRating(), currentFavoriteMovie.getPoster(),
+                            currentFavoriteMovie.getBackdrop(), currentFavoriteMovie.getTheMovieDbId());
+                    currentMovie.setmId(currentFavoriteMovie.getTheMovieDbId());
                     intent.putExtra(DetailActivity.CURRENT_MOVIE, (Parcelable) currentMovie);
                     context.startActivity(intent);
                 }
@@ -70,24 +76,24 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.Favo
 
     @Override
     public void onBindViewHolder(FavoritesAdapter.FavoritesAdapterViewHolder holder, int position) {
-        currentMovie = favoriteMovieEntityList.get(position);
-        holder.bind(currentMovie);
+        currentFavoriteMovie = favoriteMovieEntityList.get(position);
+        holder.bind(currentFavoriteMovie);
     }
 
     @Override
     public int getItemCount() {
         return favoriteMovieEntityList != null ? favoriteMovieEntityList.size() : 0;
     }
-
-    public void setClickListener(ListItemClickListener itemClickListener) {
-        this.mClickListener = itemClickListener;
-    }
+//
+//    public void setClickListener(ListItemClickListener itemClickListener) {
+//        this.mClickListener = itemClickListener;
+//    }
 
     /**
      * The interface that receives onItemClickListener messages.
      */
     public interface ListItemClickListener {
-        void onItemClickListener(int clickedItem);
+        void onClick(int clickedItem);
     }
 
     /**
@@ -99,14 +105,14 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.Favo
         notifyDataSetChanged();
     }
 
-    public List<FavoriteMovieEntity> getFavoriteMovies() {
-        return favoriteMovieEntityList;
-    }
+//    public List<FavoriteMovieEntity> getFavoriteMovies() {
+//        return favoriteMovieEntityList;
+//    }
 
     // convenience method for getting data at click position
-    FavoriteMovieEntity getMovieId(int id) {
-        return favoriteMovieEntityList.get(id);
-    }
+//    FavoriteMovieEntity getMovieId(int id) {
+//        return favoriteMovieEntityList.get(id);
+//    }
 
 }
 

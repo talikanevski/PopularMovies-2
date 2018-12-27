@@ -35,12 +35,12 @@ public interface FavoriteMovieDao {
     @Delete
     void deleteMovie(FavoriteMovieEntity favoriteMovie);
 
-    @Query("DELETE FROM favorite_movies WHERE backdropId = :id")
+    @Query("DELETE FROM favorite_movies WHERE theMovieDbId = :id")
     void deleteMovieMy(String id);
 
-    @Query("SELECT * FROM favorite_movies WHERE backdropId = :id")
+    @Query("SELECT * FROM favorite_movies WHERE theMovieDbId = :id")
     LiveData<FavoriteMovieEntity> loadFavoritesById (String id);
 
-    @Query("SELECT * FROM favorite_movies WHERE backdropId = :id")
+    @Query("SELECT * FROM favorite_movies WHERE theMovieDbId = :id")
     FavoriteMovieEntity loadFavoritesByIdMy (String id);
 }
