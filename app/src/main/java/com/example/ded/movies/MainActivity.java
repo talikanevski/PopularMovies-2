@@ -185,7 +185,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     @Override
     public void onLoaderReset(Loader<List<Movie>> loader) {
         Log.i(LOG_TAG, "Test:  onLoaderReset called");
-
         mAdapter.notifyDataSetChanged();
     }
 
@@ -227,7 +226,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 setTitle(R.string.high_rated_movies);
                 reload();
                 return true;
-            case R.id.navigation_favorites:// TODO (1) doesn't work yet
+            case R.id.navigation_favorites://
                 setTitle(R.string.your_favorite_movies);
                 populateUiWithFavorites();
                 return true;

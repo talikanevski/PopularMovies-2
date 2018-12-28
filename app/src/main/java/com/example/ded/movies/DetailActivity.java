@@ -65,6 +65,8 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
     public static final String EXTRA_ID = "extraTaskId";
     // Extra for the ID to be received after rotation
     public static final String INSTANCE_ID = "instanceId";
+    public List<Object> trailersPlusReviews;
+    public Trailer firstTrailer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -150,17 +152,24 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
                 }
             });
 
-            // Setup FAB to share the movie's trailer
+            // Setup FAB to share the first movie's trailer
             //Implement sharing functionality to allow the user to share the first trailer’s YouTube URL from the movie details screen.
             fabShare = (FloatingActionButton) findViewById(R.id.share_fab);
             fabShare.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    //TODO
                     Intent i = new Intent();
                     i.setType("text/plain");
                     i.setAction(Intent.ACTION_SEND);
-                    i.putExtra(Intent.EXTRA_TEXT, "");//TODO
+                    i.putExtra(Intent.EXTRA_TEXT, "");
+                    // Add data to the intent, the receiving app will decide
+                    // what to do with it.
+
+                    i.putExtra(Intent.EXTRA_SUBJECT, firstTrailer.getTrailerName());
+                    i.putExtra(Intent.EXTRA_TEXT, Uri.parse(YOUTUBE_URL + firstTrailer.getTrailerKey()));
+
+                    startActivity(Intent.createChooser(i, getString(R.string.share_text_for_chooser) + currentMovie.getTitle()));
+
                     startActivity(i);
                 }
             });
@@ -252,7 +261,7 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            List<Object> trailersPlusReviews = new ArrayList<Object>();
+            trailersPlusReviews = new ArrayList<Object>();
             trailersPlusReviews.add(trailers);
             trailersPlusReviews.add(reviews);
             return trailersPlusReviews;
@@ -262,6 +271,7 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
         protected void onPostExecute(List<Object> trailersPlusReviews) {
             if (trailersPlusReviews != null) {
                 Trailer[] trailers = (Trailer[]) trailersPlusReviews.get(0);
+                firstTrailer = trailers[0];
                 adapter.setTrailerData(trailers);
 
                 Review[] reviews = (Review[]) trailersPlusReviews.get(1);

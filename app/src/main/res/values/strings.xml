@@ -30,5 +30,6 @@
     <string name="most_popular_movies">Most Popular Movies</string>
     <string name="high_rated_movies">Highest-rated Movies</string>
     <string name="your_favorite_movies">Your Favorite Movies</string>
+    <string name="share_text_for_chooser">Share first trailer link for :</string>
 
 </resources>
