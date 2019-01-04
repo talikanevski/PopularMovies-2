@@ -42,9 +42,10 @@
                     android:id="@+id/title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginRight="32dp"
                     android:layout_marginStart="16dp"
                     android:layout_marginLeft="16dp"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="32dp"
                     android:textColor="@color/colorPrimary"
                     android:textSize="22sp"
                     android:textStyle="bold"
@@ -86,27 +87,10 @@
                         android:id="@+id/release_date"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1.5"
-                        android:textColor="#FFFFFF" />
-
-                    <TextView
-                        android:id="@+id/rating_label"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Rating:"
-                        android:textColor="#FF5252"
+                        android:layout_weight="3.5"
+                        android:textColor="#FFFFFF"
                         android:textSize="20sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/avg_rating"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:textColor="#FF5252"
-                        android:textSize="20sp"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"/>
 
                 </LinearLayout>
 
@@ -183,13 +167,41 @@
                     app:layout_constraintTop_toBottomOf="@+id/share_fab"
                     app:srcCompat="@drawable/favorites" />
 
+                <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                    xmlns:app="http://schemas.android.com/apk/res-auto"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/favorive_fab">
+
+                    <android.support.design.widget.FloatingActionButton
+                        android:id="@+id/avg_rating_fab"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="16dp"
+                        android:clickable="true"
+                        app:backgroundTint="@color/colorAccent"/>
+
+                    <TextView
+                        android:id="@+id/avg_rating"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:elevation="16dp"
+                        android:textColor="#FF5252"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        app:layout_anchor="@id/avg_rating_fab"
+                        app:layout_anchorGravity="center" />
+
+                </android.support.design.widget.CoordinatorLayout>
+
                 <android.support.design.widget.FloatingActionButton
                     android:id="@+id/share_fab"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="right"
                     android:layout_margin="16dp"
-
                     android:clickable="true"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"

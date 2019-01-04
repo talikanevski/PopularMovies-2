@@ -208,6 +208,7 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
                     setUpViewModel();
                 }
             });
+            Toast.makeText(this, "The movie added to favorites", Toast.LENGTH_SHORT).show();
         } else {
             AppExecutors.getInstance().diskIO().execute(new Runnable() {
                 @Override
@@ -218,6 +219,7 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
                     setUpViewModel();
                 }
             });
+            Toast.makeText(this, "The movie removed from favorites", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -235,7 +237,7 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
         startActivity(websiteIntent);
     }
 
-    // in a background thread get ArrayList of the trailers and reviews for selected movie
+    // In a background thread get ArrayList of the trailers and reviews for selected movie.
     // AsyncTask extends Object java.lang.Object android.os.AsyncTask<Params, Progress, Result>; ==Movie[]
     public class Task extends AsyncTask<String, String, List<Object>> {
 
