@@ -24,33 +24,33 @@
                     android:layout_height="188dp"
                     android:contentDescription="@string/backdrop"
                     android:scaleType="centerCrop"
-                    tools:layout_editor_absoluteX="16dp"
-                    tools:layout_editor_absoluteY="0dp" />
+                    app:layout_constraintStart_toStartOf="@+id/ll"
+                    tools:layout_editor_absoluteY="3dp" />
 
                 <ImageView
                     android:id="@+id/poster"
-                    android:layout_width="95dp"
-                    android:layout_height="145dp"
+                    android:layout_width="189dp"
+                    android:layout_height="257dp"
                     android:layout_marginStart="24dp"
                     android:layout_marginLeft="24dp"
-                    android:layout_marginTop="148dp"
+                    android:layout_marginTop="24dp"
+                    android:layout_marginBottom="24dp"
                     android:contentDescription="@string/poster"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/backdrop" />
+                    app:layout_constraintTop_toTopOf="@+id/share_fab"/>
 
                 <TextView
                     android:id="@+id/title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="32dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginTop="32dp"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginLeft="24dp"
+                    android:layout_marginTop="24dp"
                     android:textColor="@color/colorPrimary"
                     android:textSize="22sp"
                     android:textStyle="bold"
-                    app:layout_constraintStart_toEndOf="@+id/poster"
-                    app:layout_constraintTop_toBottomOf="@+id/backdrop" />
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/poster" />
 
 
                 <android.support.constraint.Barrier
@@ -58,7 +58,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:barrierDirection="bottom"
-                    app:constraint_referenced_ids="poster,ll,linearLayout" />
+                    app:constraint_referenced_ids="poster,ll,title,linearLayout" />
+
+                <android.support.constraint.Barrier
+                    android:id="@+id/barrier2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:barrierDirection="end"
+                    app:constraint_referenced_ids="title, linearLayout" />
 
                 <LinearLayout
                     android:id="@+id/ll"
@@ -71,7 +78,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/poster">
+                    app:layout_constraintTop_toBottomOf="@+id/title">
 
                     <TextView
                         android:id="@+id/release_date_label"
@@ -87,10 +94,10 @@
                         android:id="@+id/release_date"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="3.5"
+                        android:layout_weight="3"
                         android:textColor="#FFFFFF"
                         android:textSize="20sp"
-                        android:textStyle="bold"/>
+                        android:textStyle="bold" />
 
                 </LinearLayout>
 
@@ -162,26 +169,33 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="right"
                     android:layout_margin="16dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginTop="16dp"
                     android:clickable="true"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/poster"
                     app:layout_constraintTop_toBottomOf="@+id/share_fab"
                     app:srcCompat="@drawable/favorites" />
 
                 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
                     xmlns:app="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/coordinatorLayout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="right"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/favorive_fab">
+                    app:layout_constraintTop_toBottomOf="@+id/favorive_fab"
+                    app:layout_constraintStart_toEndOf="@+id/poster"
+                    >
 
                     <android.support.design.widget.FloatingActionButton
                         android:id="@+id/avg_rating_fab"
-                        android:layout_width="wrap_content"
+                        android:layout_width="66dp"
                         android:layout_height="wrap_content"
                         android:layout_margin="16dp"
                         android:clickable="true"
-                        app:backgroundTint="@color/colorAccent"/>
+                        app:backgroundTint="@color/colorAccent" />
 
                     <TextView
                         android:id="@+id/avg_rating"
@@ -201,9 +215,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="right"
-                    android:layout_margin="16dp"
+                    android:layout_marginTop="24dp"
                     android:clickable="true"
-                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintEnd_toEndOf="@+id/favorive_fab"
+                    app:layout_constraintStart_toStartOf="@+id/favorive_fab"
                     app:layout_constraintTop_toTopOf="parent"
                     app:srcCompat="@drawable/ic_share" />
 
