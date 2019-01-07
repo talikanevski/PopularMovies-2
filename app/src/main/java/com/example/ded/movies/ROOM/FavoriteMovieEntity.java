@@ -3,41 +3,38 @@ package com.example.ded.movies.ROOM;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
-import android.support.annotation.NonNull;
 import android.widget.ImageView;
 
 @Entity(tableName = "favorite_movies")
-// PrimaryKey is the id of the favorite movie.
-// with this the id of each favorite movie in the table will be unique
+
 public class FavoriteMovieEntity {
-    @NonNull
     //  @PrimaryKey @ColumnInfo(name = "id")
     @PrimaryKey(autoGenerate = true) // default is false
     private int id;
 
-    private String title;
+    private final String title;
     /**
      * title of the movie
      */
-    private String overview;
+    private final String overview;
     /**
      * movie overview
      */
-    private String releaseDate;
+    private final String releaseDate;
     /**
      * release date of the movie
      */
-    private String userRating;
+    private final String userRating;
     /*** user rating */
-    private String poster;
+    private final String poster;
     /**
      * movie poster
      */
-    private String backdrop;
+    private final String backdrop;
     /**
      * backdrop
      **/
-    private String theMovieDbId;
+    private final String theMovieDbId;
     /**
      *The Movie DB id
      **/
@@ -72,63 +69,32 @@ public class FavoriteMovieEntity {
         return id;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
     public String getTitle() {
         return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
     }
 
     public String getOverview() {
         return overview;
     }
 
-    public void setOverview(String overview) {
-        this.overview = overview;
-    }
-
     public String getReleaseDate() {
         return releaseDate;
-    }
-
-    public void setReleaseDate(String releaseDate) {
-        this.releaseDate = releaseDate;
     }
 
     public String getUserRating() {
         return userRating;
     }
 
-    public void setUserRating(String userRating) {
-        this.userRating = userRating;
-    }
-
     public String getPoster() {
         return poster;
-    }
-
-    public void setPoster(String poster) {
-        this.poster = poster;
     }
 
     public String getBackdrop() {
         return backdrop;
     }
 
-    public void setBackdrop(String backdrop) {
-        this.backdrop = backdrop;
-    }
-
     public String getTheMovieDbId() {
         return theMovieDbId;
     }
 
-    public void setTheMovieDbId(String theMovieDbId) {
-        this.theMovieDbId = theMovieDbId;
-    }
 }

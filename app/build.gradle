@@ -22,7 +22,7 @@ android {
         }
     }
 
-   // Enable databinding
+   // Enable data binding
     dataBinding.enabled = true
 }
 
@@ -40,13 +40,18 @@ dependencies {
     //noinspection GradleDependency
     implementation 'com.squareup.picasso:picasso:2.5.2'
     //  Adding room dependencies
+    //noinspection GradleDependency
     implementation "android.arch.persistence.room:runtime:1.0.0"
     // Adding LiveData dependencies
+    //noinspection GradleDependency
     implementation "android.arch.lifecycle:extensions:1.1.0"
+    //noinspection GradleDependency
     annotationProcessor "android.arch.lifecycle:compiler:1.1.0"
+    //noinspection GradleDependency
     annotationProcessor "android.arch.persistence.room:compiler:1.0.0"
     implementation "com.android.support:recyclerview-v7:${supportLibVersion}"
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+    //noinspection GradleDependency
     implementation 'com.squareup.picasso:picasso:2.5.2'
     androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'

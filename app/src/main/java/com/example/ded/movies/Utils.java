@@ -103,6 +103,7 @@ final class Utils {
     /**
      * Returns new URL object from the given movieId, to include trailers and reviews
      */
+    @SuppressWarnings("unused")
     public static URL trailersReviewsUrl(String movieId, String param) {
         Uri uriBuilder = Uri.parse(THE_MOVIE_DB_BASE_URL + movieId + "?" + API_Key_Label + API_Key).buildUpon()
 //                .appendQueryParameter(API_Key_Label, API_Key)
@@ -215,6 +216,7 @@ final class Utils {
         return extractFeatureFromJson(jsonResponse);
     }
 
+    @SuppressWarnings("unused")
     public static Trailer[] extractTrailersFromJson(DetailActivity.Task context, String jsonResponse) throws JSONException {
         /*If the JSON string is empty or null, then return early.**/
         if (TextUtils.isEmpty(jsonResponse)) {
@@ -239,6 +241,7 @@ final class Utils {
         return trailers;
     }
 
+    @SuppressWarnings("unused")
     public static Review[] extractReviewsFromJson(DetailActivity.Task context, String jsonResponse) throws JSONException {
 
         /*If the JSON string is empty or null, then return early.**/

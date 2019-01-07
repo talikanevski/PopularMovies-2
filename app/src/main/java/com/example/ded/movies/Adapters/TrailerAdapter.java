@@ -16,7 +16,7 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.TrailerA
     private Trailer[] mTrailers;
     private static final String YOUTUBE_BASE_URL = "https://img.youtube.com/vi/";
 
-    public static final String YOUTUBE_DEFAULT_THUMBNAIL = "/default.jpg";
+    private static final String YOUTUBE_DEFAULT_THUMBNAIL = "/default.jpg";
     private static final String TAG = TrailerAdapter.class.getSimpleName();
 
     /**
@@ -37,8 +37,9 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.TrailerA
         mOnClickListener = trailerAdapterOnClickHandler;
     }
 
+    @NonNull
     @Override
-    public TrailerAdapter.TrailerAdapterViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public TrailerAdapter.TrailerAdapterViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.trailer_item, parent, false);
@@ -62,11 +63,11 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.TrailerA
     public class TrailerAdapterViewHolder extends RecyclerView.ViewHolder
             implements View.OnClickListener {
 
-        public final ImageView ivTrailer;
+        final ImageView ivTrailer;
 
-        public TrailerAdapterViewHolder(@NonNull View itemView) {
+        TrailerAdapterViewHolder(@NonNull View itemView) {
             super(itemView);
-            ivTrailer = (ImageView) itemView.findViewById(R.id.iv_trailer_thumbnail);
+            ivTrailer = itemView.findViewById(R.id.iv_trailer_thumbnail);
             itemView.setOnClickListener(this);
         }
 

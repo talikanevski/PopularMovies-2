@@ -2,6 +2,7 @@ package com.example.ded.movies.Adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,7 +12,6 @@ import android.widget.ImageView;
 import com.example.ded.movies.DetailActivity;
 import com.example.ded.movies.Models.Movie;
 import com.example.ded.movies.R;
-import com.example.ded.movies.ROOM.FavoriteMovieEntity;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -19,9 +19,7 @@ import java.util.List;
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapterViewHolder> {
 
     private Context mContext;
-    public final List<Movie> movieList;
-    Movie currentMovie;
-    String posterUrl;
+    private final List<Movie> movieList;
 
     // data is passed into the constructor
     public MovieAdapter(Context context, List<Movie> movies) {
@@ -29,18 +27,20 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
         this.mContext = context;
     }
 
+    @NonNull
     @Override
-    public MovieAdapterViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public MovieAdapterViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         mContext = parent.getContext();
         View view = LayoutInflater.from(mContext).inflate(R.layout.poster_item, parent, false);
         return new MovieAdapterViewHolder(view);
     }
 
     public class MovieAdapterViewHolder extends RecyclerView.ViewHolder {
-        public ImageView posterImage;
-        public final View mView;
+        final ImageView posterImage;
+        @SuppressWarnings("unused")
+        final View mView;
 
-        public MovieAdapterViewHolder(View view) {
+        MovieAdapterViewHolder(View view) {
             super(view);
             mView = view;
             /* Find the View in the poster_item.xml layout with the poster of the current movie**/
@@ -48,8 +48,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
         }
 
         void bind(final Movie currentMovie) {
-            posterUrl = "https://image.tmdb.org/t/p/w185" + currentMovie.getPoster();
-            assert currentMovie != null;
+            String posterUrl = "https://image.tmdb.org/t/p/w185" + currentMovie.getPoster();
             Picasso.with(posterImage.getContext())
                     .load(posterUrl)
                     .into(posterImage);
@@ -66,8 +65,8 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
     }
 
     @Override
-    public void onBindViewHolder(MovieAdapterViewHolder movieAdapterViewHolder, int position) {
-        currentMovie = movieList.get(position);
+    public void onBindViewHolder(@NonNull MovieAdapterViewHolder movieAdapterViewHolder, int position) {
+        Movie currentMovie = movieList.get(position);
         movieAdapterViewHolder.bind(currentMovie);
     }
 
@@ -79,19 +78,14 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
     /**
      * The interface that receives onItemClickListener messages.
      */
+    @SuppressWarnings({"unused", "EmptyMethod"})
     public interface ListItemClickListener {
         void onClick(int clickedItem);
     }
-//    /**
-//     * The interface that receives onItemClickListener messages.
-//     */
-//    public interface ListItemClickListener {
-//        void onClick(int clickedItem);
-//    }
 
-    /**
-     * When data changes, this method updates the list of FavoriteMovieEntity
-     * and notifies the adapter to use the new values on it
+    /*
+      When data changes, this method updates the list of FavoriteMovieEntity
+      and notifies the adapter to use the new values on it
      */
 }
 

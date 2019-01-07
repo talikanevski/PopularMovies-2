@@ -14,6 +14,7 @@ import com.example.ded.movies.Models.Review;
 public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewAdapterViewHolder> {
     private Review[] mReviews;
 
+    @SuppressWarnings("unused")
     public ReviewAdapter(DetailActivity detailActivity) {
     }
 
@@ -28,7 +29,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewAdap
     }
 
     @Override
-    public void onBindViewHolder(ReviewAdapterViewHolder reviewAdapterViewHolder, int position) {
+    public void onBindViewHolder(@NonNull ReviewAdapterViewHolder reviewAdapterViewHolder, int position) {
         reviewAdapterViewHolder.reviewAuthor.setText(mReviews[position].getAuthor());
         reviewAdapterViewHolder.reviewContext.setText(mReviews[position].getContent());
     }
@@ -40,9 +41,9 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewAdap
 
     public class ReviewAdapterViewHolder extends RecyclerView.ViewHolder {
         final TextView reviewAuthor;
-        public final TextView reviewContext;
+        final TextView reviewContext;
 
-        public ReviewAdapterViewHolder(@NonNull View itemView) {
+        ReviewAdapterViewHolder(@NonNull View itemView) {
             super(itemView);
             reviewAuthor = itemView.findViewById(R.id.tv_author);
             reviewContext = itemView.findViewById(R.id.tv_content);

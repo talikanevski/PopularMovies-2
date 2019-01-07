@@ -3,9 +3,6 @@
     <string name="no_internet">No internet connection</string>
     <string name="no_movies">No Movies updates available, please reload the app or check after some time.</string>
 
-    <!-- Error messages-->
-    <string name="detail_error_message">Data not available</string>
-
     <string name="settings_title">Movie Settings</string>
 
     <!-- Strings For Sort-By Preference [CHAR LIMIT=30] -->
@@ -34,5 +31,7 @@
     <string name="trailers">Trailers</string>
     <string name="reviews">Reviews</string>
     <string name="trailer_thumbnail">trailer_thumbnail</string>
+    <string name="no_trailers_found_for_this_movie">No Trailers Found For This Movie</string>
+    <string name="no_reviews_found_for_this_movie">No Reviews Found For This Movie</string>
 
 </resources>

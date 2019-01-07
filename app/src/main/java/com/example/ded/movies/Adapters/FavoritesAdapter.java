@@ -2,7 +2,7 @@ package com.example.ded.movies.Adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Parcelable;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,10 +20,8 @@ import java.util.List;
 public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.FavoritesAdapterViewHolder> {
 
     private Context mContext;
-    public List<FavoriteMovieEntity> favoriteMovieEntityList;
-    FavoriteMovieEntity currentFavoriteMovie;
-    Movie currentMovie;
-    String posterUrl;
+    private List<FavoriteMovieEntity> favoriteMovieEntityList;
+    private Movie currentMovie;
 
     // data is passed into the constructor
     public FavoritesAdapter(Context context, List<FavoriteMovieEntity> favoriteMovies) {
@@ -31,13 +29,15 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.Favo
         this.mContext = context;
     }
 
+    @NonNull
     @Override
-    public FavoritesAdapter.FavoritesAdapterViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public FavoritesAdapter.FavoritesAdapterViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         mContext = parent.getContext();
         View view = LayoutInflater.from(mContext).inflate(R.layout.poster_item, parent, false);
         return new FavoritesAdapter.FavoritesAdapterViewHolder(view);
     }
 
+    @SuppressWarnings("unused")
     public class FavoritesAdapterViewHolder extends RecyclerView.ViewHolder {
         public final ImageView posterImage;
         public final View mView;
@@ -50,8 +50,7 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.Favo
         }
 
         void bind(final FavoriteMovieEntity currentFavoriteMovie) {
-            posterUrl = "https://image.tmdb.org/t/p/w185" + currentFavoriteMovie.getPoster();
-            assert currentFavoriteMovie != null;
+            String posterUrl = "https://image.tmdb.org/t/p/w185" + currentFavoriteMovie.getPoster();
             Picasso.with(posterImage.getContext())
                     .load(posterUrl)
                     .into(posterImage);
@@ -65,7 +64,7 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.Favo
                             currentFavoriteMovie.getUserRating(), currentFavoriteMovie.getPoster(),
                             currentFavoriteMovie.getBackdrop(), currentFavoriteMovie.getTheMovieDbId());
                     currentMovie.setmId(currentFavoriteMovie.getTheMovieDbId());
-                    intent.putExtra(DetailActivity.CURRENT_MOVIE, (Parcelable) currentMovie);
+                    intent.putExtra(DetailActivity.CURRENT_MOVIE, currentMovie);
                     context.startActivity(intent);
                 }
             });
@@ -73,8 +72,8 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.Favo
     }
 
     @Override
-    public void onBindViewHolder(FavoritesAdapter.FavoritesAdapterViewHolder holder, int position) {
-        currentFavoriteMovie = favoriteMovieEntityList.get(position);
+    public void onBindViewHolder(@NonNull FavoritesAdapter.FavoritesAdapterViewHolder holder, int position) {
+        FavoriteMovieEntity currentFavoriteMovie = favoriteMovieEntityList.get(position);
         holder.bind(currentFavoriteMovie);
     }
 
@@ -86,6 +85,7 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.Favo
     /**
      * The interface that receives onItemClickListener messages.
      */
+    @SuppressWarnings({"EmptyMethod", "unused"})
     public interface ListItemClickListener {
         void onClick(int clickedItem);
     }

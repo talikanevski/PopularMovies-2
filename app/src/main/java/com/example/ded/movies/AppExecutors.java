@@ -1,9 +1,5 @@
 package com.example.ded.movies;
 
-import android.os.Handler;
-import android.os.Looper;
-import android.support.annotation.NonNull;
-
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
@@ -19,21 +15,16 @@ public class AppExecutors {
     private static final Object LOCK = new Object();
     private static AppExecutors sInstance;
     private final Executor diskIO;
-    private final Executor mainThread;
-    private final Executor networkIO;
 
-    private AppExecutors(Executor diskIO, Executor networkIO, Executor mainThread) {
+    private AppExecutors(Executor diskIO) {
         this.diskIO = diskIO;
-        this.networkIO = networkIO;
-        this.mainThread = mainThread;
     }
 
     public static AppExecutors getInstance() {
         if (sInstance == null) {
             synchronized (LOCK) {
-                sInstance = new AppExecutors(Executors.newSingleThreadExecutor(),
-                        Executors.newFixedThreadPool(3),
-                        new MainThreadExecutor());
+                sInstance = new AppExecutors(Executors.newSingleThreadExecutor()
+                );
             }
         }
         return sInstance;
@@ -43,20 +34,26 @@ public class AppExecutors {
         return diskIO;
     }
 
-    public Executor mainThread() {
-        return mainThread;
-    }
+// --Commented out by Inspection START (07-Jan-19 09:42):
+//    public Executor mainThread() {
+//        return mainThread;
+//    }
+// --Commented out by Inspection STOP (07-Jan-19 09:42)
 
-    public Executor networkIO() {
-        return networkIO;
-    }
+// --Commented out by Inspection START (07-Jan-19 09:51):
+//    public Executor networkIO() {
+//        return networkIO;
+//    }
+// --Commented out by Inspection STOP (07-Jan-19 09:51)
 
-    private static class MainThreadExecutor implements Executor {
-        private final Handler mainThreadHandler = new Handler(Looper.getMainLooper());
-
-        @Override
-        public void execute(@NonNull Runnable command) {
-            mainThreadHandler.post(command);
-        }
-    }
+// --Commented out by Inspection START (07-Jan-19 10:20):
+//    private static class MainThreadExecutor implements Executor {
+//        private final Handler mainThreadHandler = new Handler(Looper.getMainLooper());
+//
+//        @Override
+//        public void execute(@NonNull Runnable command) {
+//            mainThreadHandler.post(command);
+//        }
+//    }
+// --Commented out by Inspection STOP (07-Jan-19 10:20)
 }

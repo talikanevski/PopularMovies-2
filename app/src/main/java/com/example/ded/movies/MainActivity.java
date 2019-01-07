@@ -4,7 +4,6 @@ import android.app.LoaderManager;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
-import android.content.Intent;
 import android.content.Loader;
 import android.databinding.DataBindingUtil;
 import android.net.ConnectivityManager;
@@ -18,7 +17,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -52,11 +50,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private MovieAdapter mAdapter;
     private FavoritesAdapter favoritesAdapter;
 
-    /**
-     * TextView that is displayed when the list is empty
-     **/
-    //Create a data binding instance. This class was generated based on the name of the xml layout
-    private ActivityMainBinding mBinding;
     private RecyclerView mRv;
     private TextView mEmptyView;
 
@@ -70,7 +63,12 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         // set the Content View using DataBindingUtil to the activity_main layout
         // DataBindUtil.setContentView replaces our normal call of setContent view:
         // " setContentView(R.layout.activity_main); "
-        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+        /*
+      TextView that is displayed when the list is empty
+     */ /*
+          TextView that is displayed when the list is empty
+         */ //Create a data binding instance. This class was generated based on the name of the xml layout
+        ActivityMainBinding mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
         // set up recyclerView and adapter to display the posters
         mRv = mBinding.rv;
@@ -117,7 +115,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             /* if internet connection got lost and than back, we'll see mEmptyView
               with text "no internet connection"
               we need to reload the app and while it's reloading it's better to see a spinner**/
-            mEmptyView.setOnClickListener(new View.OnClickListener() {//TODO!!!!!!!!!!!!!!!!!!!!!!!!!!
+            mEmptyView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     reload();
@@ -136,6 +134,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
         //  Initialization of member variable for the data base
         //  Creation AppDatabase member variable for the Database
+        //noinspection unused
         AppDatabase mDb = AppDatabase.getInstance(getApplicationContext());
         setUpViewModel();
     }
@@ -233,13 +232,13 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     public void onClick(int itemId) {
     }
 
-    public void populateUiWithFavorites() {
+    private void populateUiWithFavorites() {
 //        favoritesAdapter.setClickListener((FavoritesAdapter.ListItemClickListener) this);
         mRv.setAdapter(favoritesAdapter);
         setUpViewModel();
     }
 
-    public void setUpViewModel() {
+    private void setUpViewModel() {
         MainViewModel viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
         viewModel.getFavoriteMovies().observe(this, new Observer<List<FavoriteMovieEntity>>() {
             @Override
@@ -249,10 +248,4 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             }
         });
     }
-
-//    public void OnItemClickListener(int itemId) {
-//        Intent intent = new Intent(MainActivity.this, DetailActivity.class);
-//        intent.putExtra(DetailActivity.ID, itemId);
-//        startActivity(intent);
-//    }
 }
