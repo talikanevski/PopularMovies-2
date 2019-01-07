@@ -2,16 +2,19 @@ package com.example.ded.movies;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -41,8 +44,7 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
     private static final String LOG_TAG = DetailActivity.class.getName();
     public static final String CURRENT_MOVIE = "current_movie";
     private static final String YOUTUBE_URL = "https://www.youtube.com/watch?v=";
-    ActivityDetailBinding mBinding; //Create a data binding instance. This class was generated based on the name of the xml layout
-    private MovieAdapter movieAdapter;
+    private ActivityDetailBinding mBinding; //Create a data binding instance. This class was generated based on the name of the xml layout
     private TrailerAdapter adapter;
     private ReviewAdapter reviewAdapter;
     public Movie currentMovie;
@@ -56,12 +58,12 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
     ImageView backdrop;
     FloatingActionButton fabFavorite;
     FloatingActionButton fabShare;
+    FloatingActionButton fabRating;
     Boolean isFavorite;
     private FavoritesAdapter favoritesAdapter;
     public static final String ID = "id";
     // Constant for default favorite movie id to be used when not in update mode
     private static final int DEFAULT_ID = -1;
-    private int mId = DEFAULT_ID;
     public static final String EXTRA_ID = "extraTaskId";
     // Extra for the ID to be received after rotation
     public static final String INSTANCE_ID = "instanceId";
@@ -75,7 +77,6 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
         // DataBindUtil.setContentView replaces our normal call of setContent view:
         // " setContentView(R.layout.activity_detail); "
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_detail);
-        movieAdapter = new MovieAdapter(this, new ArrayList<Movie>());
 
         // set up RecyclerView and adapter to display the trailers
         LinearLayoutManager trailersLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
@@ -93,7 +94,7 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
         mDb = AppDatabase.getInstance(getApplicationContext());
         favoritesAdapter = new FavoritesAdapter(this, new ArrayList<FavoriteMovieEntity>());
         if (savedInstanceState != null && savedInstanceState.containsKey(INSTANCE_ID)) {
-            mId = savedInstanceState.getInt(INSTANCE_ID, DEFAULT_ID);
+            int mId = savedInstanceState.getInt(INSTANCE_ID, DEFAULT_ID);
         }
         Intent intent = getIntent();
         currentMovie = intent.getParcelableExtra(CURRENT_MOVIE);
@@ -109,6 +110,20 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
         } else {
             /* Find the TextView in the activity_detail.xml layout with title**/
             titleTextView = findViewById(R.id.title);
+            final Vibrator vibe = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+            titleTextView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Context context = getApplicationContext();
+                    CharSequence text = "The title of the movie";
+                    int duration = Toast.LENGTH_SHORT;
+                    Toast toast = Toast.makeText(context, text, duration);
+                    toast.setGravity(Gravity.TOP|Gravity.START, 130, 240);
+                    toast.show();
+
+                    vibe.vibrate(1000);
+                }
+            });
 
             /* Get the version name from the current Movie object and set this text on the name TextView**/
             // Display the title of the current movie in that TextView
@@ -121,10 +136,37 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
             /* Find the TextView in the activity_detail.xml layout with releaseDate**/
             releaseDateTextView = findViewById(R.id.release_date);
             releaseDateTextView.setText(currentMovie.getReleaseDate()); //.substring(0, 4)
+            releaseDateTextView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Context context = getApplicationContext();
+                    CharSequence text = "The release date of the movie";
+                    int duration = Toast.LENGTH_SHORT;
+                    Toast toast = Toast.makeText(context, text, duration);
+                    toast.setGravity(Gravity.TOP|Gravity.START, 130, 240);
+                    toast.show();
+
+                    vibe.vibrate(1000);
+                }
+            });
 
             /* Find the TextView in the activity_detail.xml_detail.xml layout with userRating**/
             userRatingTextView = findViewById(R.id.avg_rating);
             userRatingTextView.setText(currentMovie.getUserRating());
+            fabRating = findViewById(R.id.avg_rating_fab);
+            fabRating.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Context context = getApplicationContext();
+                    CharSequence text = "The rating of the movie";
+                    int duration = Toast.LENGTH_SHORT;
+                    Toast toast = Toast.makeText(context, text, duration);
+                    toast.setGravity(Gravity.TOP|Gravity.START, 130, 240);
+                    toast.show();
+
+                    vibe.vibrate(1000);
+                }
+            });
 
             /* Find the View in the activity_detail.xml_detail.xml layout with the poster of the of the current movie**/
             posterImage = findViewById(R.id.poster);
@@ -208,7 +250,13 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
                     setUpViewModel();
                 }
             });
-            Toast.makeText(this, "The movie added to favorites", Toast.LENGTH_SHORT).show();
+            Context context = getApplicationContext();
+            CharSequence text = "The movie added to favorites";
+            int duration = Toast.LENGTH_SHORT;
+            Toast toast = Toast.makeText(context, text, duration);
+            toast.setGravity(Gravity.TOP|Gravity.START, 130, 240);
+            toast.show();
+
         } else {
             AppExecutors.getInstance().diskIO().execute(new Runnable() {
                 @Override
@@ -219,7 +267,12 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
                     setUpViewModel();
                 }
             });
-            Toast.makeText(this, "The movie removed from favorites", Toast.LENGTH_SHORT).show();
+            Context context = getApplicationContext();
+            CharSequence text = "The movie removed from favorites";
+            int duration = Toast.LENGTH_SHORT;
+            Toast toast = Toast.makeText(context, text, duration);
+            toast.setGravity(Gravity.TOP|Gravity.START, 130, 240);
+            toast.show();
         }
     }
 

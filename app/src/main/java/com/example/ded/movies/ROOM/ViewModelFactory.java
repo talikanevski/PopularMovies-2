@@ -3,13 +3,12 @@ package com.example.ded.movies.ROOM;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 
-public class ViewModelFactory extends ViewModelProvider.NewInstanceFactory {
-    //two member variables. One for the database and one for the id
-    private final AppDatabase mDb;
+class ViewModelFactory extends ViewModelProvider.NewInstanceFactory {
     private final int mId;
 
     public ViewModelFactory (AppDatabase database, int id){
-        mDb = database;
+        //two member variables. One for the database and one for the id
+        AppDatabase mDb = database;
         mId = id;
     }
 //

@@ -19,13 +19,11 @@ import java.util.List;
 
 public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.FavoritesAdapterViewHolder> {
 
-    public static FavoritesAdapter.FavoritesAdapterViewHolder FavoritesAdapterViewHolder;//TODO   I am not sure about this at all....
-    Context mContext;
+    private Context mContext;
     public List<FavoriteMovieEntity> favoriteMovieEntityList;
     FavoriteMovieEntity currentFavoriteMovie;
     Movie currentMovie;
     String posterUrl;
-//    private ListItemClickListener mClickListener;
 
     // data is passed into the constructor
     public FavoritesAdapter(Context context, List<FavoriteMovieEntity> favoriteMovies) {
@@ -41,7 +39,7 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.Favo
     }
 
     public class FavoritesAdapterViewHolder extends RecyclerView.ViewHolder {
-        public ImageView posterImage;
+        public final ImageView posterImage;
         public final View mView;
 
         public FavoritesAdapterViewHolder(View view) {
@@ -84,10 +82,6 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.Favo
     public int getItemCount() {
         return favoriteMovieEntityList != null ? favoriteMovieEntityList.size() : 0;
     }
-//
-//    public void setClickListener(ListItemClickListener itemClickListener) {
-//        this.mClickListener = itemClickListener;
-//    }
 
     /**
      * The interface that receives onItemClickListener messages.
@@ -104,15 +98,5 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.Favo
         favoriteMovieEntityList = favoriteMovies;
         notifyDataSetChanged();
     }
-
-//    public List<FavoriteMovieEntity> getFavoriteMovies() {
-//        return favoriteMovieEntityList;
-//    }
-
-    // convenience method for getting data at click position
-//    FavoriteMovieEntity getMovieId(int id) {
-//        return favoriteMovieEntityList.get(id);
-//    }
-
 }
 

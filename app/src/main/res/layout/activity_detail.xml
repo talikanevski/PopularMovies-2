@@ -12,7 +12,7 @@
         <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:app="http://schemas.android.com/apk/res-auto"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
 
             <android.support.constraint.ConstraintLayout
                 android:layout_width="match_parent"
@@ -22,10 +22,9 @@
                     android:id="@+id/backdrop"
                     android:layout_width="match_parent"
                     android:layout_height="188dp"
+                    android:layout_marginTop="8dp"
                     android:contentDescription="@string/backdrop"
-                    android:scaleType="centerCrop"
-                    app:layout_constraintStart_toStartOf="@+id/ll"
-                    tools:layout_editor_absoluteY="3dp" />
+                    android:scaleType="centerCrop" />
 
                 <ImageView
                     android:id="@+id/poster"
@@ -37,7 +36,7 @@
                     android:layout_marginBottom="24dp"
                     android:contentDescription="@string/poster"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/share_fab"/>
+                    app:layout_constraintTop_toTopOf="@+id/share_fab" />
 
                 <TextView
                     android:id="@+id/title"
@@ -46,19 +45,20 @@
                     android:layout_marginStart="24dp"
                     android:layout_marginLeft="24dp"
                     android:layout_marginTop="24dp"
+                    android:clickable="true"
+                    android:focusable="true"
                     android:textColor="@color/colorPrimary"
                     android:textSize="22sp"
                     android:textStyle="bold"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/poster" />
 
-
                 <android.support.constraint.Barrier
                     android:id="@+id/barrier"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:barrierDirection="bottom"
-                    app:constraint_referenced_ids="poster,ll,title,linearLayout" />
+                    app:constraint_referenced_ids="poster,title,linearLayout" />
 
                 <android.support.constraint.Barrier
                     android:id="@+id/barrier2"
@@ -66,40 +66,6 @@
                     android:layout_height="wrap_content"
                     app:barrierDirection="end"
                     app:constraint_referenced_ids="title, linearLayout" />
-
-                <LinearLayout
-                    android:id="@+id/ll"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="24dp"
-                    android:layout_marginLeft="24dp"
-                    android:layout_marginTop="16dp"
-                    android:orientation="horizontal"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/title">
-
-                    <TextView
-                        android:id="@+id/release_date_label"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="2"
-                        android:text="Release Date:"
-                        android:textColor="#FFFFFF"
-                        android:textSize="20sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/release_date"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="3"
-                        android:textColor="#FFFFFF"
-                        android:textSize="20sp"
-                        android:textStyle="bold" />
-
-                </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/linearLayout"
@@ -114,7 +80,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/ll">
+                    app:layout_constraintTop_toBottomOf="@+id/title">
 
                     <TextView
                         android:id="@+id/textView"
@@ -138,7 +104,7 @@
                         android:id="@+id/trailers_label"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Trailers"
+                        android:text="@string/trailers"
                         android:textColor="#FFFFFF"
                         android:textSize="20sp"
                         android:textStyle="bold" />
@@ -152,7 +118,7 @@
                         android:id="@+id/reviews_label"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Reviews"
+                        android:text="@string/reviews"
                         android:textColor="#FFFFFF"
                         android:textSize="20sp"
                         android:textStyle="bold" />
@@ -167,12 +133,13 @@
                     android:id="@+id/favorive_fab"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="right"
+                    android:layout_gravity="end"
                     android:layout_margin="16dp"
                     android:layout_marginStart="8dp"
                     android:layout_marginLeft="8dp"
                     android:layout_marginTop="16dp"
                     android:clickable="true"
+                    android:focusable="true"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/poster"
                     app:layout_constraintTop_toBottomOf="@+id/share_fab"
@@ -183,11 +150,10 @@
                     android:id="@+id/coordinatorLayout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="right"
+                    android:layout_gravity="end"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/favorive_fab"
                     app:layout_constraintStart_toEndOf="@+id/poster"
-                    >
+                    app:layout_constraintTop_toBottomOf="@+id/favorive_fab">
 
                     <android.support.design.widget.FloatingActionButton
                         android:id="@+id/avg_rating_fab"
@@ -195,6 +161,7 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="16dp"
                         android:clickable="true"
+                        android:focusable="true"
                         app:backgroundTint="@color/colorAccent" />
 
                     <TextView
@@ -206,17 +173,28 @@
                         android:textSize="20sp"
                         android:textStyle="bold"
                         app:layout_anchor="@id/avg_rating_fab"
-                        app:layout_anchorGravity="center" />
+                        app:layout_anchorGravity="center"
+                        tools:targetApi="lollipop" />
 
                 </android.support.design.widget.CoordinatorLayout>
+
+                <TextView
+                    android:id="@+id/release_date"
+                    style="@style/releaseDate"
+
+                    app:layout_anchorGravity="center"
+                    app:layout_constraintEnd_toEndOf="@+id/coordinatorLayout"
+                    app:layout_constraintStart_toStartOf="@+id/coordinatorLayout"
+                    app:layout_constraintTop_toBottomOf="@+id/coordinatorLayout" />
 
                 <android.support.design.widget.FloatingActionButton
                     android:id="@+id/share_fab"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="right"
+                    android:layout_gravity="end"
                     android:layout_marginTop="24dp"
                     android:clickable="true"
+                    android:focusable="true"
                     app:layout_constraintEnd_toEndOf="@+id/favorive_fab"
                     app:layout_constraintStart_toStartOf="@+id/favorive_fab"
                     app:layout_constraintTop_toTopOf="parent"

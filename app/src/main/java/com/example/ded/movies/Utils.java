@@ -32,7 +32,7 @@ import static com.example.ded.movies.MovieLoader.LOG_TAG;
  * Helper methods related to requesting and receiving movies from "The Movie DB".
  */
 final class Utils {
-    final static String API_APPEND_TO_RESPONSE_PARAM = "append_to_response";//use for trailers and reviews
+    private final static String API_APPEND_TO_RESPONSE_PARAM = "append_to_response";//use for trailers and reviews
 
     private Utils() {
     }

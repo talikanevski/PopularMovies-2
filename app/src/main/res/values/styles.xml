@@ -8,4 +8,18 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="releaseDate">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">56dp</item>
+        <item name="android:textColor">#FF5252</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:background">@drawable/release_date_tv</item>
+        <item name="android:clickable">true</item>
+        <item name="android:paddingTop">14dp</item>
+        <item name="android:paddingRight">10dp</item>
+        <item name="android:paddingLeft">10dp</item>
+        <item name="android:paddingBottom">8dp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
 </resources>

@@ -10,13 +10,13 @@ import com.example.ded.movies.ROOM.FavoriteMovieEntity;
 
 import java.util.List;
 
-public class MainViewModel extends AndroidViewModel {
+class MainViewModel extends AndroidViewModel {
 
     // Constant for logging
     private static final String TAG = MainViewModel.class.getSimpleName();
 
     //Adding a favoriteMovies member variable for a list of FavoriteMovieEntity objects wrapped in a LiveData
-    private LiveData<List<FavoriteMovieEntity>> favoriteMovies;
+    private final LiveData<List<FavoriteMovieEntity>> favoriteMovies;
 
     public MainViewModel(Application application) {
         super(application);

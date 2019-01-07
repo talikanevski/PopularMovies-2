@@ -39,7 +39,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewAdap
     }
 
     public class ReviewAdapterViewHolder extends RecyclerView.ViewHolder {
-        public final TextView reviewAuthor;
+        final TextView reviewAuthor;
         public final TextView reviewContext;
 
         public ReviewAdapterViewHolder(@NonNull View itemView) {

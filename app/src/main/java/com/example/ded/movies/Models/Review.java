@@ -1,7 +1,7 @@
 package com.example.ded.movies.Models;
 
 public class Review {
-    String author;
+    private String author;
     String content;
 
     public Review() {}

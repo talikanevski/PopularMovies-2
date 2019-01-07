@@ -18,8 +18,8 @@ import java.util.List;
 
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapterViewHolder> {
 
-    Context mContext;
-    public List<Movie> movieList;
+    private Context mContext;
+    public final List<Movie> movieList;
     Movie currentMovie;
     String posterUrl;
 
@@ -82,16 +82,16 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
     public interface ListItemClickListener {
         void onClick(int clickedItem);
     }
+//    /**
+//     * The interface that receives onItemClickListener messages.
+//     */
+//    public interface ListItemClickListener {
+//        void onClick(int clickedItem);
+//    }
 
     /**
      * When data changes, this method updates the list of FavoriteMovieEntity
      * and notifies the adapter to use the new values on it
      */
-//    public void setFavoriteMovies(List<FavoriteMovieEntity> favoriteMovies) {
-////        mFavoriteMovie = favoriteMovies;
-//        notifyDataSetChanged();
-//    }
-
-
 }
 

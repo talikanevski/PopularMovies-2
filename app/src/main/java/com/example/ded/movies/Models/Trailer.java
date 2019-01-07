@@ -1,7 +1,7 @@
 package com.example.ded.movies.Models;
 
 public class Trailer {
-    String trailerName;
+    private String trailerName;
     String trailerKey;
 
     public Trailer() {

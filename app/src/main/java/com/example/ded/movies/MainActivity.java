@@ -56,13 +56,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
      * TextView that is displayed when the list is empty
      **/
     //Create a data binding instance. This class was generated based on the name of the xml layout
-    ActivityMainBinding mBinding;
+    private ActivityMainBinding mBinding;
     private RecyclerView mRv;
     private TextView mEmptyView;
-    private ProgressBar mLoadingSpinner;
-
-    //  Creation AppDatabase member variable for the Database
-    private AppDatabase mDb;
 
 
     @Override
@@ -79,7 +75,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         // set up recyclerView and adapter to display the posters
         mRv = mBinding.rv;
         mEmptyView = mBinding.emptyView;
-        mLoadingSpinner = mBinding.loadingSpinner;
         GridLayoutManager layoutManager = new GridLayoutManager(this, 3);
         mRv.setLayoutManager(layoutManager);
         mAdapter = new MovieAdapter(this, new ArrayList<Movie>());
@@ -140,7 +135,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         }
 
         //  Initialization of member variable for the data base
-        mDb = AppDatabase.getInstance(getApplicationContext());
+        //  Creation AppDatabase member variable for the Database
+        AppDatabase mDb = AppDatabase.getInstance(getApplicationContext());
         setUpViewModel();
     }
 
